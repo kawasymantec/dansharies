@@ -1,0 +1,21 @@
+<ons-page>
+        
+    <ons-toolbar>
+        <div class="center">残念</div>
+    </ons-toolbar>
+
+    <p>で、どうだった？</p>
+        <ons-row>
+        <ons-col style="margin:10px;">
+            <ons-button modifier="large" ng-click="myNavigator.pushPage('success.html',{ animation: 'none'});">
+            成功した
+            </ons-button>
+        </ons-col>
+        <ons-col style="margin:10px;" >
+            <ons-button modifier="large" ng-click="myNavigator.pushPage('failure.html',{ animation: 'none'});">
+            失敗した
+            </ons-button>
+        </ons-col>
+    </ons-row>
+
+</ons-page>

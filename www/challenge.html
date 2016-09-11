@@ -1,0 +1,27 @@
+<ons-page ng-controller="challengeCtrl as ctrl">
+        
+    <ons-toolbar>
+        <div class="center">挑戦中！</div>
+    </ons-toolbar>
+
+    <p>ここに挑戦中の人の情報が見える</p>
+    <ons-row>
+        <ons-col style="margin:10px;">
+            <ons-button modifier="large" ng-click="ctrl.cheerUp();">
+            はげます
+            </ons-button>
+        </ons-col>
+        <ons-col style="margin:10px;">
+            <ons-button modifier="large" ng-click="ctrl.cheerMe();">
+            はげまされる
+            </ons-button>
+        </ons-col>
+    </ons-row>
+    <ons-row>
+        <ons-col style="margin:10px;">
+            <ons-button modifier="large--cta" ng-click="ctrl.giveUp();">
+            あきらめる
+            </ons-button>
+        </ons-col>
+    </ons-row>
+</ons-page>

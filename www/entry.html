@@ -1,0 +1,21 @@
+<ons-page ng-controller="entryCtrl as ctrl">
+        
+    <ons-toolbar>
+        <div class="center">チャレンジの意思確認</div>
+    </ons-toolbar>
+    <p>{{ctrl.title}}</p>
+    <p>{{ctrl.description}}</p>
+    <br />
+    <ons-row>
+        <ons-col style="margin:10px;">
+            <ons-button modifier="large" ng-click="ctrl.entry();">
+            やる
+            </ons-button>
+        </ons-col>
+        <ons-col style="margin:10px;">
+            <ons-button modifier="large"  ng-click="ctrl.refuse();">
+            やらない
+            </ons-button>
+        </ons-col>
+    </ons-row>
+</ons-page>
