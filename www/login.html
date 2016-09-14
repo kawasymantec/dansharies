@@ -1,0 +1,28 @@
+<ons-page ng-controller="loginCtrl as ctrl">
+        
+    <ons-toolbar>
+        <div class="center">ログイン</div>
+    </ons-toolbar>
+
+    <p>断捨離系SNS</p>
+    <ons-row>
+        <ons-col style="margin:10px;"> 
+            <ons-input modifier="large" placeholder="User Name" ng-model="ctrl.username" float style="width:100%;"></ons-input>
+        </ons-col>
+    </ons-row>
+    <ons-row>
+        <ons-col style="margin:10px;"> 
+            <ons-input modifier="large" placeholder="Password" type="password" ng-model="ctrl.password" float style="width:100%;"></ons-input>
+        </ons-col>
+    </ons-row>
+    <ons-row>
+        <ons-col style="margin:10px;"> 
+            <ons-button modifier="large" ng-click="ctrl.login();">ログイン</ons-button>
+        </ons-col>
+    </ons-row>
+    <ons-row>
+        <ons-col style="margin:10px;"> 
+            <ons-button modifier="large--cta" ng-click="ctrl.regist();">ユーザ登録</ons-button>
+        </ons-col>
+    </ons-row>
+</ons-page>

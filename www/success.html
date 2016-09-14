@@ -1,8 +1,19 @@
-<ons-page>
+<ons-page ng-controller="successCtrl as ctrl">
         
     <ons-toolbar>
         <div class="center">Page2</div>
     </ons-toolbar>
 
-    <p>おめでとう！</p>
+    <p>おめでとう！成功の秘訣とか教えてね</p>
+        <ons-row>
+        <ons-col style="margin:10px;"> 
+            <ons-input modifier="large" placeholder="成功者のお言葉" ng-model="ctrl.comment" float style="width:100%;"></ons-input>
+        </ons-col>
+    </ons-row>
+    <ons-row>
+        <ons-col style="margin:10px;"> 
+            <ons-button modifier="large" ng-click="ctrl.registComment();">登録</ons-button>
+        </ons-col>
+    </ons-row>
+
 </ons-page>
