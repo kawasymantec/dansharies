@@ -1,0 +1,12 @@
+<ons-page ng-controller="logoutCtrl as ctrl">
+    <ons-toolbar>
+        <div class="center">ログアウト</div>
+    </ons-toolbar>
+
+    <p>{{ctrl.username}}サン　ログアウトスルカイ？</p>
+    <ons-row>
+        <ons-col style="margin:10px;"> 
+            <ons-button modifier="large" ng-click="ctrl.logout();">ログアウト</ons-button>
+        </ons-col>
+    </ons-row>
+</ons-page>
