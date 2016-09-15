@@ -54,7 +54,7 @@ myApp.controller('topCtrl',function($scope,challenger,$timeout){
                 },100);
                 break;
             }
-        });
+        });a
     }else{
         $timeout(function() {
             myNavigator.replacePage('login.html',{ animation: 'none'});        

@@ -1,6 +1,7 @@
-<ons-page>
+<ons-page ng-controller="idleCtrl as ctrl">
     <ons-toolbar>
         <div class="center">ミッションなし</div>
+        <div class="right"><ons-toolbar-button ng-click="ctrl.logout();"><ons-icon icon="ion-android-close" size="28px"></ons-icon></ons-toolbar-button></div>
     </ons-toolbar>
 
     <p>ミッションなし</p>

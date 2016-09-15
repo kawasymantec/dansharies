@@ -28,4 +28,9 @@ myApp.controller('entryCtrl',function($scope,challenger){
             myNavigator.replacePage('logout.html',{ animation: 'none'});
         });
     };
+
+    this.logout = function(){
+        console.log("entryCtrl logout");
+        myNavigator.replacePage('logout.html',{ animation: 'none'});
+    };
 });

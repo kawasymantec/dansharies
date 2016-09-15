@@ -5,37 +5,101 @@ myApp.factory('challenger',function($http){
     console.log("Challenger init");
     var data = {};
     data.ncmb = new NCMB("38b0271001ed27f11c37c96c48a22c3450b80531d8fe34691b840fa9fa78b276","aca37c2ba53f426e752addb2310361771343832ab94360c3dfae65b874d0932a");
-    /*
-        ログイン
-    */
+
     //
-    data.currentMission = {};
+    data.currentMission = null;
+    
+    /*
+        参加中もしくは、最後に参加したミッションの情報を取得する
+    */
+    data.getCurrentMission = function(success,failed){
+        //NCMBから参加中もしくは、最後に参加したミッションの情報を取得する
+        var Challengers = data.ncmb.DataStore("challengers");
+        var Missions = data.ncmb.DataStore("missions");
+        var currentMissionResult = "";
+        //挑戦中か？
+        Challengers.equalTo("userid",data.ncmb.currentUser.objectId)
+        .order("createDate",true)
+        .fetchAll()
+        .then(function(results){
+            if(results.length>0){
+                Missions.equalTo("objectId",results[0].missionid)
+                .fetchAll()
+                .then(function(results){
+                    data.currentMission = results[0]; 
+                    console.log (data.currentMission.objectId);
+                    success();
+                })
+                .catch(function(err){
+                        console.log("getCurrentMission query err");
+                        failed("query err");
+                });
+            }else{
+                console.log("getCurrentMission err");
+                failed("no mission");
+            }
+        })
+        .catch(function(err){
+                console.log("getCurrentMission query err");
+                failed("query err");
+        });
+        
+    };
+    
+    /*
+        開催中ミッションの情報を取得する
+    */
+    data.getActiveMission = function(success,failed){
+        //開催中ミッションの情報を取得する
+        var Missions = data.ncmb.DataStore("missions");
+        //挑戦中か？
+        Missions.equalTo("status","active")
+        .order("createDate",true)
+        .fetchAll()
+        .then(function(results){
+            if(results.length>0){
+                success(results[0]);
+            }else{
+                failed("no mission");
+            }
+        });
+        
+    };
     
     data.login = function(userid, password,success,failed){
         //スポットデータの初期化
         console.log("Challenger login");
         data.ncmb.User.login(userid, password)
-        .then(function(data){
-          // ログイン後処理
+        .then(function(user){
+                  // ログイン後処理
                 console.log("Challenger login success");
-                success();
+                data.getCurrentMission(success,success);
         })
         .catch(function(err){
           // エラー処理
-                console.log("Challenger login failed");
+                console.log("Challenger login failed "  + err);
                 failed(err);
         });
-    }
+    };
 
     /*
         ログアウト
     */
-    data.logout = function(){
+    data.logout = function(success,failed){
         //スポットデータの初期化
         console.log("Challenger logout");
-        data.ncmb.User.logout();
-        console.log("Challenger logout success");
-    }
+        data.ncmb.User.logout()
+        .then(function(){
+            console.log("Challenger logout success");
+            data.currentMission = {};
+            success();
+        })
+        .catch(function(err){
+          // エラー処理
+            console.log("Challenger logout failed "  + err);
+            failed(err);
+        });
+    };
     
     /*
         ユーザ登録
@@ -56,10 +120,10 @@ myApp.factory('challenger',function($http){
             })
             .catch(function(err){
               // エラー処理
-                console.log("Challenger signup failed");
+                console.log("Challenger signup failed" + err);
                 failed();
             });
-    }
+    };
     
     /*
         ログイン中かどうかを返す
@@ -69,13 +133,13 @@ myApp.factory('challenger',function($http){
         console.log("Challenger isLogin");
         var currentUser = data.ncmb.User.getCurrentUser();
         if (currentUser) {
-            console.log("ログイン中のユーザー: " + currentUser.get("userName"));
+            console.log("ログイン中のユーザー: " + currentUser.userName);
             return true;
         } else {
             console.log("未ログインまたは取得に失敗");
             return false;
         }
-    }
+    };
     
     /*
         状態をカエス
@@ -87,101 +151,95 @@ myApp.factory('challenger',function($http){
         if (currentUser) {
             var Missions = data.ncmb.DataStore("missions");
             var Challengers = data.ncmb.DataStore("challengers");
-            var currentMissionId = "";
+            var currentMission = data.currentMission;
             var currentMissionResult = "";
-            //挑戦中か？
-            Challengers.equalTo("userid",currentUser.objectId)
-            .equalTo("status","")
-            .fetchAll()
-            .then(function(results){
-                for (var i = 0; i < results.length; i++) {
-                    currentMissionId = results[i].missionid;
-                    currentMissionResult = results[i].result;
-                    console.log (currentMissionId);
-                }
-                if(currentMissionId!==""){
-                    //参加中のMissionがある
-                    console.log("参加中のMissionあり");
-                        //結果が入っているか？
-                    if(currentMissionResult=="success"){
-                        //成功コメント待ち
-                        success("Success");
-                        return;
-                    }else if(currentMissionResult=="failed"){
-                        //失敗コメント待ち
-                        success("Failed");
-                        return;
-                    }
-                    //Mission開催中か？
-                    Missions.equalTo("objectId",currentMissionId)
-                    .fetchAll()
-                    .then(function(results){
-                        data.currentMission = null;
-                        for (var i = 0; i < results.length; i++) {
-                            data.currentMission = results[i];
+            if(currentMission){
+                console.log("前回参加ミッションID：" + currentMission.objectId);
+                //参加したミッションがある
+                Challengers.equalTo("userid",currentUser.objectId)
+                .equalTo("missionid",currentMission.objectId)
+                .equalTo("status","")
+                .fetchAll()
+                .then(function(results){
+                    if(results.length>0) {
+                        currentMissionResult = results[0].result;
+                        //参加中のMissionがある
+                        console.log("参加中のMissionあり");
+                            //結果が入っているか？
+                        if(currentMissionResult=="success"){
+                            console.log("参加中のMissionあり success");
+                            //成功コメント待ち
+                            success("Success");
+                            return;
+                        }else if(currentMissionResult=="failed"){
+                            console.log("参加中のMissionあり failed");
+                            //失敗コメント待ち
+                            success("Failed");
+                            return;
                         }
-                        if(data.currentMission){
-                            if(data.currentMission.status=="active"){
-                                //終わってない
-                                success("Challenge");
-                                return;
+                        console.log("前回参加ミッション状態チェック：" + currentMission.objectId);
+                        
+                        //Mission開催中か？
+                        Missions.equalTo("objectId",currentMission.objectId)
+                        .fetchAll()
+                        .then(function(results){
+                            data.currentMission = null;
+                            if(results.length>0){
+                                data.currentMission = results[0];
+                                if(data.currentMission.status=="active"){
+                                    console.log("おわってない");
+                                    //終わってない
+                                    success("Challenge");
+                                }else{
+                                    console.log("おわった");
+                                    //終わった
+                                    success("Finish");
+                                }
+                            }else{
+                                console.log("no mission ");
+                                // Error
+                                success("Error");
                             }
-                            //終わった
-                            success("Finish");
-                            return;
-                        }
-                        // Error
-                        success("Error");
-                        return;
-                    })
-                    .catch(function(err){
-                        console.log(err);
-                        success("Error");
-                    });
-                }else{
-                    //参加中のイベントがない 
-                    console.log("参加中のイベントなし");
-                     var now = new Date();
-                    console.log("現在時刻"+ now.toISOString());
-                     var nowString = { "__type": "Date", "iso": now.toISOString() };
-                    //イベント開催中か？
-                    Missions.equalTo("status","active")
-                    .fetchAll()
-                    .then(function(results){
-                        data.currentMission = null;
-                        for (var i = 0; i < results.length; i++) {
-                            data.currentMission = results[i];
-                            console.log("イベントID:"+data.currentMission.objectId);
-                            console.log("イベントタイトル:"+data.currentMission.title);
-                            console.log("イベント説明:"+data.currentMission.description);
-                            console.log("イベント状態:"+data.currentMission.status);
-                            console.log("イベント開始時刻"+data.currentMission.start_datetime);
-                            console.log("イベント終了時刻"+data.currentMission.end_datetime);
-                        }
-                        if(data.currentMission){
-                            //イベント開催中
+                        })
+                        .catch(function(err){
+                            console.log("mission search err " + err);
+                            success("Error");
+                        });
+                    }else{
+                        //参加中のイベントがない 
+                        console.log("参加中のイベントなし");
+                        //開催中のミッションを探す
+                        data.getActiveMission(function(activemission){
+                            //あれば、開催中のミッションへの参加待ち(Wait)
+                            data.currentMission = activemission;
                             success("Wait");
-                            return;
-                        }
-                        success("Idle");
-                        return;
-                    })
-                    .catch(function(err){
-                        console.log(err);
-                        success("Error");
-                    });
-                }
-            })
-            .catch(function(err){
-                console.log(err);
-                success("Error");
-            });
+                        },function(err){
+                            //なければ、ミッション開始街(Idle)
+                            success("Idle");
+                        });
+                    }
+                });
+            }else{
+                console.log("前回参加ミッションなし" );
+                //一度もミッションに参加してない
+                //開催中のミッションを探す
+                data.getActiveMission(function(activemission){
+                    //あれば、開催中のミッションへの参加待ち(Wait)
+                    data.currentMission = activemission;
+                    success("Wait");
+                    
+                },function(err){
+                    console.log("getActiveMission err:" + err);
+                    //なければ、ミッション開始待ち(Idle)
+                    success("Idle");
+                });
+            }
         } else {
             console.log("未ログインまたは取得に失敗");
             success("Error");
             return;
         }
-    }
+    };
 
     /*
         ミッションに参加する
@@ -190,13 +248,17 @@ myApp.factory('challenger',function($http){
         console.log("Challenger MissionStart");
         var Challengers = data.ncmb.DataStore("challengers");
         var challengers = new Challengers();
+        var currentUser = data.ncmb.User.getCurrentUser();
         challengers.set("missionid", mission_id)
-             .set("userid", data.currentUser.objectId)
+             .set("userid", currentUser.objectId)
+             .set("username", currentUser.userName)
              .set("status", "")
              .set("result", "")
              .save()
              .then(function(challenger){
               // 保存後の処理
+            //    currentUser.set("missionid",mission_id);
+            //    currentUser.update();
                 console.log("Challenger MissionStart Success");
                 success();
              })
@@ -204,7 +266,7 @@ myApp.factory('challenger',function($http){
                // エラー処理
                failed(err);
              });
-    }
+    };
     /*
         ミッションを拒否する
     */
@@ -212,9 +274,11 @@ myApp.factory('challenger',function($http){
         //スポットデータの初期化
         console.log("Challenger MissionRefuse");
         var Challengers = data.ncmb.DataStore("challengers");
+        var currentUser = data.ncmb.User.getCurrentUser();
         var challengers = new Challengers();
         challengers.set("missionid", mission_id)
-            .set("userid", data.currentUser.objectId)
+            .set("userid", currentUser.objectId)
+            .set("username", currentUser.userName)
             .set("status", "refuse")
             .set("result", "refuse")
             .save()
@@ -227,7 +291,7 @@ myApp.factory('challenger',function($http){
                 console.log(err);
                 failed(err);
             });
-    }
+    };
 
     /*
         ミッションを終了する
@@ -237,21 +301,26 @@ myApp.factory('challenger',function($http){
         console.log("Challenger MissionFinish");
         var Challengers = data.ncmb.DataStore("challengers");
         Challengers.equalTo("missionid",mission_id)
-            .equalTo("userid",data.currentUser.objectId)
+            .equalTo("userid",data.ncmb.currentUser.objectId)
+            .order("createDate",true)
             .fetchAll()
             .then(function(results){
-                for (var i = 0; i < results.length; i++) {
-                    results[i].set("result",result);
-                    results[i].update();
+                if(results.length>0) {
+                    results[0].set("result",result);
+                    results[0].update()
+                    .then(function(){
+                        success();
+                    });
+                }else{
+                   failed(err);
                 }
-                success();
             })
             .catch(function(err){
                // エラー処理
                console.log(err);
                failed(err);
              });
-    }
+    };
 
     /*
         ミッションを終了する
@@ -261,21 +330,24 @@ myApp.factory('challenger',function($http){
         console.log("Challenger MissionClose");
         var Challengers = data.ncmb.DataStore("challengers");
         Challengers.equalTo("missionid",mission_id)
-            .equalTo("userid",data.currentUser.objectId)
+            .equalTo("userid",data.ncmb.currentUser.objectId)
+            .order("createDate",true)
             .fetchAll()
             .then(function(results){
-                for (var i = 0; i < results.length; i++) {
-                    results[i].set("status","finish");
-                    results[i].update();
+                if(results.length>0) {
+                    results[0].set("status","finish");
+                    results[0].update()
+                    .then(function(){
+                        success();
+                    });
                 }
-                success();
             })
             .catch(function(err){
                // エラー処理
                console.log(err);
                failed(err);
              });
-    }
+    };
 
     /*
         チャレンジ終了コメントの登録
@@ -283,8 +355,31 @@ myApp.factory('challenger',function($http){
     data.MissionCommentUp = function(mission_id,comment,success,failed){
         //スポットデータの初期化
         console.log("Challenger ChallengeCommentUp");
-        return true;
-    }
+        if(comment){
+            var Challengers = data.ncmb.DataStore("challengers");
+            Challengers.equalTo("missionid",mission_id)
+                .equalTo("userid",data.ncmb.currentUser.objectId)
+                .order("createDate",true)
+                .fetchAll()
+                .then(function(results){
+                    if(results.length>0) {
+                        results[0].set("status","finish");
+                        results[0].set("comment",comment);
+                        results[0].update()
+                        .then(function(){
+                            success();
+                        });
+                    }
+                })
+                .catch(function(err){
+                   // エラー処理
+                   console.log(err);
+                   failed(err);
+                 });
+        }else{
+            data.MissionClose(mission_id,success,failed)
+        }
+    };
     
     /*
         励ましコメントの登録
@@ -293,7 +388,7 @@ myApp.factory('challenger',function($http){
         //スポットデータの初期化
         console.log("Challenger ChallengeCommentUp");
         return true;
-    }
+    };
 
     /*
         励ましコメントの取得
@@ -302,7 +397,7 @@ myApp.factory('challenger',function($http){
         //スポットデータの初期化
         console.log("Challenger ChallengeGetCheer");
         return true;
-    }
+    };
     
     /*
         ミッションの状態を取得する
@@ -330,7 +425,6 @@ myApp.factory('challenger',function($http){
            failed(err);
          });
 
-    }
+    };
     return data;
-    }
-);
+});

@@ -35,9 +35,15 @@ myApp.controller('loginCtrl',function($scope,challenger){
 myApp.controller('logoutCtrl',function($scope,challenger,$timeout){
     "use strict";
     console.log("logoutCtrl init!");
-    challenger.logout();
-    $timeout(function() {
-        myNavigator.replacePage('top.html',{ animation: 'none'});        
-    },300);
+    challenger.logout(
+        function(){
+            //成功
+            $timeout(function() {
+                myNavigator.replacePage('top.html',{ animation: 'none'});        
+            },500);
+        },function(){
+            //失敗
+        }
+    );
 });
 

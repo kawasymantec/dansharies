@@ -1,4 +1,4 @@
-<ons-page>
+<ons-page ng-controller="resultEntryCtrl as ctrl ">
         
     <ons-toolbar>
         <div class="center">残念</div>
@@ -7,12 +7,12 @@
     <p>で、どうだった？</p>
         <ons-row>
         <ons-col style="margin:10px;">
-            <ons-button modifier="large" ng-click="myNavigator.pushPage('success.html',{ animation: 'none'});">
+            <ons-button modifier="large" ng-click="ctrl.success();">
             成功した
             </ons-button>
         </ons-col>
         <ons-col style="margin:10px;" >
-            <ons-button modifier="large" ng-click="myNavigator.pushPage('failure.html',{ animation: 'none'});">
+            <ons-button modifier="large" ng-click="ctrl.failure();">
             失敗した
             </ons-button>
         </ons-col>
