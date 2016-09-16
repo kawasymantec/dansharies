@@ -12,6 +12,7 @@ https://mb.api.cloud.nifty.com/2013-09-01/applications/J2MyTSYNctp6tx7e/publicFi
 
 https://mb.api.cloud.nifty.com/2013-09-01/applications/J2MyTSYNctp6tx7e/publicFiles/dansharies.apk
 
+https://github.com/kawasymantec/dansharies/raw/master/dansharies.apk
 
 
     var cheerme_times = 0;

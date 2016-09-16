@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<widget xmlns="http://www.w3.org/ns/widgets" id="com.example.helloworld" version="1.0.0">
+<widget xmlns="http://www.w3.org/ns/widgets" id="com.dansharies.app" version="1.0.0">
   <name>dansharies</name>
   <description>Made with Monaca (http://monaca.mobi)</description>
   <author/>
@@ -91,14 +91,14 @@
   <preference name="FadeSplashScreen" value="true"/>
   <preference name="ShowSplashScreenSpinner" value="false"/>
   <preference name="EnableViewportScale" value="false"/>
+  <preference name="monaca:WebViewEngine" value="default"/>
   <access origin="*"/>
   <preference name="KeepRunning" value="true"/>
   <preference name="monaca:AndroidIsPackageNameSeparate" value="false"/>
   <preference name="DisallowOverscroll" value="true"/>
-  <preference name="monaca:WebViewEngine" value="default"/>
-  <preference name="Orientation" value="default"/>
+  <preference name="Orientation" value="portrait"/>
   <preference name="SplashScreenDelay" value="1000"/>
   <preference name="Fullscreen" value="false"/>
   <preference name="WindowsStorePublisherName" value="My Name"/>
-  <preference name="WindowsStoreIdentityName" value="df3d8575-4fd8-2c50-8067-4649b201cca5"/>
+  <preference name="WindowsStoreIdentityName" value="3c1f7e68-5608-b336-ef26-7229f9c1e475"/>
 </widget>
