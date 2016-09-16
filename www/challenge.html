@@ -5,7 +5,11 @@
         <div class="right"><ons-toolbar-button ng-click="ctrl.logout();"><ons-icon icon="ion-android-close" size="28px"></ons-icon></ons-toolbar-button></div>
     </ons-toolbar>
 
-    <p>ここに挑戦中の人の情報が見える</p>
+    <img src="img/str_challenge.png" alt="挑戦中"/><br/>
+    {{ctrl.title}}<br/><br/>
+    <img src="img/challenge.png" alt="挑戦中" style="width: 100%;"/>
+    <p>挑戦中 {{ctrl.activeChallenger}}人/ {{ctrl.totalChallenger}}人</p>
+
     <ons-row>
         <ons-col style="margin:10px;">
             <ons-button modifier="large" ng-click="ctrl.cheerUp();">

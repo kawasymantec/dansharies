@@ -1,0 +1,20 @@
+<ons-page ng-controller="hagemasCtrl as ctrl">
+        
+    <ons-toolbar>
+        <div class="center">応援</div>
+    </ons-toolbar>
+
+    <img src="img/hagemasu.png" style="width: 100%;"/>
+    
+    <ons-row>
+        <ons-col style="margin:10px;"> 
+            <ons-input modifier="large" placeholder="きみならできる" ng-model="ctrl.message" float style="width:100%;"></ons-input>
+        </ons-col>
+    </ons-row>
+    
+        <ons-row>
+        <ons-col style="margin:10px;">
+            <ons-button modifier="large" ng-click="ctrl.cheer();">はげます</ons-button>
+        </ons-col>
+    </ons-row>
+</ons-page>

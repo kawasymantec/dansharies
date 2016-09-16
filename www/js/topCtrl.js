@@ -9,6 +9,7 @@ myApp.controller('topCtrl',function($scope,challenger,$timeout){
         ディスパッチャー
     */
     if(challenger.isLogin()){
+        console.log("ログイン済み");
         challenger.getStatus(function(status){
             switch(status){
             case 'Wait':    //ミッション待ち
@@ -54,7 +55,7 @@ myApp.controller('topCtrl',function($scope,challenger,$timeout){
                 },100);
                 break;
             }
-        });a
+        });
     }else{
         $timeout(function() {
             myNavigator.replacePage('login.html',{ animation: 'none'});        

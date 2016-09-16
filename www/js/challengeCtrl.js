@@ -4,12 +4,31 @@
 /*
     チャレンジ参加中画面
 */
-myApp.controller('challengeCtrl',function($scope,challenger){
+myApp.controller('challengeCtrl',function($scope,challenger,$timeout){
     "use strict";
     console.log("challengeCtrl init!");
-    this.title = "NO SODA DAY";
-    this.description = "今日一日だけ炭酸をやめよう！";
+    this.title = challenger.currentMission.title;
+    this.description = challenger.currentMission.description;
     this.cheerMessages = ['まけるな','あきらめるな！'];
+    this.activeChallenger = "-";
+    this.totalChallenger = "-";
+    var target = this;
+    var cheerme_times = 0;
+    challenger.GetChallengerCount(challenger.currentMission.objectId,function(active,total){
+        console.log("challengeCtrl challenger Count!");
+        $timeout(function() {
+            target.activeChallenger = active;
+            target.totalChallenger = total;
+        },100);
+    },function(err){
+        console.log(err);
+        $timeout(function() {
+            target.activeChallenger = "??";
+            target.totalChallenger = "??";
+        },100);
+        
+        
+    });
 
     //諦める
     this.giveUp = function(){
@@ -25,19 +44,30 @@ myApp.controller('challengeCtrl',function($scope,challenger){
     this.cheerUp = function(){
         console.log("challengeCtrl cheerUp");
         //ダイアログ表示
-        
-        //メッセージ入力
-        //だれかに応援メッセージを届ける
-//        myNavigator.replacePage('status.html',{ animation: 'none'});
+         myNavigator.pushPage('hagemasu.html',{ animation: 'left'});
+      
     };
     
     //励まされる
     this.cheerMe = function(){
         console.log("challengeCtrl cheerMe");
-        //だれかの応援メッセージが届く
-        this.cheerMessages.unshift('がんばれ！');    
-
-//        myNavigator.replacePage('status.html',{ animation: 'none'});
+        cheerme_times++;
+        if(cheerme_times % 5 == 0){            
+            myNavigator.pushPage('cheermeHirose.html',{ animation: 'none'});        
+        } else {
+            myNavigator.pushPage('cheerme.html',{ animation: 'none'});        
+        }
+/*        //だれかの応援メッセージが届く
+        //メッセージ入力
+        challenger.ChallengeGetCheer(challenger.currentMission.objectId,function(cheer){
+            console.log("応援取得:" + cheer.username);
+            console.log("応援取得:" + cheer.message);
+            //成功
+     //       this.cheerMessages.unshift(cheer.message);    
+        },function(){
+            //失敗
+        });
+*/
     };
     
     this.logout = function(){

@@ -13,7 +13,7 @@ myApp.controller('entryCtrl',function($scope,challenger){
         //チャレンジに参加する
         console.log("entryCtrl entry");
         challenger.MissionStart(challenger.currentMission.objectId,function(){
-            myNavigator.replacePage('challenge.html',{ animation: 'none'});
+            myNavigator.replacePage('ganbare.html',{ animation: 'none'});
         },function(){
             myNavigator.replacePage('logout.html',{ animation: 'none'});
         });

@@ -1,10 +1,10 @@
 <ons-page ng-controller="registCtrl as ctrl">
         
     <ons-toolbar>
-        <div class="center">ユーザ登録</div>
+        <div class="center">ユーザを登録してね</div>
     </ons-toolbar>
 
-    <p>ここにゆーざ登録画面　ID/PW程度</p>
+    <p>ユーザを登録してね　</p>
     <ons-row>
         <ons-col style="margin:10px;">
             <ons-input placeholder="User Name" ng-model="ctrl.username"></ons-input>
@@ -12,12 +12,12 @@
     </ons-row>
     <ons-row>
         <ons-col style="margin:10px;">
-            <ons-input placeholder="Password" ng-model="ctrl.password"></ons-input>
+            <ons-input placeholder="Password" type="password" ng-model="ctrl.password"></ons-input>
         </ons-col>
     </ons-row>
     <ons-row>
         <ons-col style="margin:10px;">
-            <ons-button modifier="large"  ng-click="ctrl.regist();">進む！</ons-button>
+            <ons-button modifier="large"  ng-click="ctrl.regist();">登録！！！</ons-button>
         </ons-col>
     </ons-row>
 </ons-page>

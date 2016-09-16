@@ -1,21 +1,55 @@
 <ons-page ng-controller="entryCtrl as ctrl">
         
     <ons-toolbar>
-        <div class="center">チャレンジの意思確認</div>
+        <div class="center" >Mission!!</div>
         <div class="right"><ons-toolbar-button ng-click="ctrl.logout();"><ons-icon icon="ion-android-close" size="28px"></ons-icon></ons-toolbar-button></div>
     </ons-toolbar>
-    <p>{{ctrl.title}}</p>
-    <p>{{ctrl.description}}</p>
+        <div class="center" style="color:red;"></div>
+    <ons-row align="bottom">
+        <ons-col style="margin:10px;"> 
+            <fieldset style="border-radius: 10px;"><legend><strong><font color="#ff0000" >Mission!!</font></strong></legend>
+                <div>{{ctrl.title}} </div>
+                
+       </ons-col>
+   <ons-col>
+        <img src="img/pic_ms.PNG" style="width: 80%; height: 80%"/>       
+    </ons-col>
+
+    </ons-row>
+    
+     <fieldset ><legend><strong><font color="#ff0000" >挑戦のための応援</font></strong></legend>
+
     <br />
+    <ons-row align="bottom">
+ <ons-col>
+        <div class="Demo">
+        <img src="img/cola.png" style="width: 40%;
+height: 40%;" align="right;"/>       
+        </div>
+    </ons-col>
+ 
+ </ons-row>
+ <ons-row>
+    <ons-col>
+      <div class="Demo">
+       <div>{{ctrl.description}}</div>
+      </div>
+  
+      <div class="Demo">
+        
+      </div>
+    </ons-col>
+  </ons-row>
+    </fieldset>
     <ons-row>
         <ons-col style="margin:10px;">
             <ons-button modifier="large" ng-click="ctrl.entry();">
-            やる
+            挑戦する
             </ons-button>
         </ons-col>
         <ons-col style="margin:10px;">
             <ons-button modifier="large"  ng-click="ctrl.refuse();">
-            やらない
+            挑戦しない
             </ons-button>
         </ons-col>
     </ons-row>

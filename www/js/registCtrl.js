@@ -15,6 +15,7 @@ myApp.controller('registCtrl',function($scope,challenger){
         challenger.signUp(this.username,this.password,function(){
             myNavigator.replacePage('top.html',{ animation: 'none'});
         },function(){
+            
         });
         //参加待ち状態のチャレンジがある
         //なにもない
