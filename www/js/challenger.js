@@ -7,6 +7,7 @@ myApp.factory('challenger',function($http){
     data.isLogined = false;
     var username = "";
     var password = "";
+    // ここのキー情報を書き換えてください
     data.ncmb = new NCMB("38b0271001ed27f11c37c96c48a22c3450b80531d8fe34691b840fa9fa78b276","aca37c2ba53f426e752addb2310361771343832ab94360c3dfae65b874d0932a");
 
     //
@@ -72,8 +73,10 @@ myApp.factory('challenger',function($http){
         });
     };
     
+    /*
+        ログイン
+    */
     data.login = function(userid, password,success,failed){
-        //スポットデータの初期化
         console.log("Challenger login");
         data.ncmb.User.login(userid, password)
         .then(function(user){
@@ -93,7 +96,6 @@ myApp.factory('challenger',function($http){
         ログアウト
     */
     data.logout = function(success,failed){
-        //スポットデータの初期化
         console.log("Challenger logout");
         data.ncmb.User.logout()
         .then(function(){
@@ -119,6 +121,9 @@ myApp.factory('challenger',function($http){
         //ユーザー名・パスワードを設定
         user.set("userName", userid)
             .set("password",password);
+        /*
+            ここにユーザIDの重複チェック処理を入れる
+        */
         // 新規登録
         user.signUpByAccount()
             .then(function(){
@@ -129,7 +134,7 @@ myApp.factory('challenger',function($http){
             .catch(function(err){
               // エラー処理
                 console.log("Challenger signup failed" + err);
-                failed();
+                failed(err);
             });
     };
     
@@ -141,21 +146,17 @@ myApp.factory('challenger',function($http){
     data.isLogin = function(){
         console.log("Challenger isLogin :" + data.isLogined);
         return data.isLogined;
-/*        var currentUser = data.ncmb.User.getCurrentUser();
-        if (currentUser) {
-            console.log("ログイン中のユーザー: " + currentUser.userName);
-            return true;
-        } else {
-            console.log("未ログインまたは取得に失敗");
-            return false;
-        }
- */
- 
     };
     
     /*
-        状態をカエス
-        
+    　自分のミッションの状態を取得する
+    　Idle : 参加できるミッションなし
+    　Wait : ミッション参加待ち（参加するしない？）
+    　Challenge : ミッション挑戦中
+    　Finish : ミッション終了（結果登録待ち）
+    　Success : ミッション成功（コメント登録待ち）
+    　Failed : ミッション失敗（コメント登録待ち）
+    　Error : 状態異常
     */
     data.getStatus = function(success){
         console.log("Challenger getStatus");
@@ -280,7 +281,7 @@ myApp.factory('challenger',function($http){
              });
     };
     /*
-        ミッションを拒否する
+        ミッションへの参加を拒否する
     */
     data.MissionRefuse = function(mission_id,success,failed){
         //スポットデータの初期化
