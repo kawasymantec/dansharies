@@ -8,6 +8,8 @@ myApp.controller('entryCtrl',function($scope,challenger){
     console.log("entryCtrl init!");
     this.title = challenger.currentMission.title;
     this.description = challenger.currentMission.description;
+    this.missionNo = challenger.currentMission.missionNo || 0;
+    this.baasurlbase = challenger.baasurlbase;
     //参加する
     this.entry = function(){
         //チャレンジに参加する
