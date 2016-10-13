@@ -123,7 +123,7 @@ myApp.factory('challenger',function($http){
         user.set("userName", userid)
             .set("password",password);
         /*
-            ここにユーザIDの重複チェック処理を入れる
+            ここにユーザIDの重複チェック処理を入れる by kodaka
         */
         // 新規登録
         user.signUpByAccount()
