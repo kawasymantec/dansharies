@@ -8,12 +8,18 @@ myApp.factory('challenger',function($http){
     var username = "";
     var password = "";
     // ここのキー情報を書き換えてください
-    data.ncmb = new NCMB("38b0271001ed27f11c37c96c48a22c3450b80531d8fe34691b840fa9fa78b276","aca37c2ba53f426e752addb2310361771343832ab94360c3dfae65b874d0932a");
+//    data.ncmb = new NCMB("38b0271001ed27f11c37c96c48a22c3450b80531d8fe34691b840fa9fa78b276","aca37c2ba53f426e752addb2310361771343832ab94360c3dfae65b874d0932a");
 //    data.ncmb = new NCMB("4b88bd93e5559645c2bb49bf28d61955600bcba834647b2921be0e0b6d35349c","bc4389b1d9c193ce52772f59d6331f699a364a860826d4178e45ba3cb4334bb1");
+    //アプリケーションキー・クライアントキー
+    data.ncmb = new NCMB("1c86df0315639d025352c9605c008b6923da7b4825c04595cbefde5425826f81","4861b858964d8842849b1bcd94c0442be08c0b34250c4b79cc96115e3a57319a");
 
     //
     data.currentMission = null;
     
+    // 西島がアバター用に追加
+    data.avatorStatus = {};
+
+
     /*
         参加中もしくは、最後に参加したミッションの情報を取得する
     */
@@ -139,9 +145,11 @@ myApp.factory('challenger',function($http){
             });
     };
     
-    data.baasurlbase = "https://mb.api.cloud.nifty.com/2013-09-01/applications/J2MyTSYNctp6tx7e/publicFiles/";
+//    data.baasurlbase = "https://mb.api.cloud.nifty.com/2013-09-01/applications/J2MyTSYNctp6tx7e/publicFiles/";
 //    data.baasurlbase = "https://mb.api.cloud.nifty.com/2013-09-01/applications/lML0I3RGoykDdhm/publicFiles/";
-    /*
+    data.baasurlbase = "https://mb.api.cloud.nifty.com/2013-09-01/applications/HRXHqc5QIzTcC1zL/publicFiles/";
+
+/*
         ログイン中かどうかを返す
         true: ログイン中　false: 未ログイン
     */
@@ -468,8 +476,73 @@ myApp.factory('challenger',function($http){
                failed(err);
              });
         
-    }
+    };
     
+    /*
+        西島がアバター表示用のデータを取得するために作成
+    */
+    data.calcAvatorStatus = function(success,failed){
+        console.log("Challenger calcAvatorStatus");
+
+        // アバター、メダル(全体)、メダル(項目別)の変化するスレッショルド
+        // 現在、アバターは3種類、メダルは4種類存在する＋金メダルの時の分母
+        var lvThre    = [ 0, 1, 2 ];
+        var mainThre  = [ 0, 1, 2, 3, 100 ];
+        var otherThre = [ 0, 1, 2, 3, 100 ];
+        var medal     = [ "N", "B", "S", "G" ];
+
+        data.avatorStatus.lv           =  1;
+        data.avatorStatus.mainCurrent  =  0;
+        data.avatorStatus.mainMedal    =  medal[0];
+        data.avatorStatus.mainNext     =  mainThre[1];
+        data.avatorStatus.gameCurrent  =  0;
+        data.avatorStatus.gameMedal    =  medal[0];
+        data.avatorStatus.gameNext     =  otherThre[1];
+        data.avatorStatus.drinkCurrent =  0;
+        data.avatorStatus.drinkMedal   =  medal[0];
+        data.avatorStatus.drinkNext    =  otherThre[1];
+        
+        var currentUser = data.ncmb.User.getCurrentUser();
+        data.avatorStatus.user = currentUser.userName+"("+currentUser.objectId+")";
+
+
+//                .equalTo("status","finish")
+//                .equalTo("result","success")
+
+
+        if (currentUser) {
+            var Missions = data.ncmb.DataStore("missions");
+            var Challengers = data.ncmb.DataStore("challengers");
+            var currentMission = data.currentMission;
+            var currentMissionResult = "";
+            if(currentMission){
+                console.log("前回参加ミッションID：" + currentMission.objectId);
+                //参加したミッションがある
+                Challengers.equalTo("userid",currentUser.objectId)
+                .fetchAll()
+                .then(function(results){
+                    results.forEach(function(ret){
+                        data.avatorStatus.mainCurrent  = data.avatorStatus.mainCurrent  + 1;
+                        
+                        /* TODO:種類の判定を行う必要有 */
+                        data.avatorStatus.drinkCurrent = data.avatorStatus.drinkCurrent + 1;
+                    });
+                    /*
+                    mainThre.reverse().forEach(function(ret){
+                        
+                    });
+                    */
+                });
+            }else{
+                console.log("前回参加ミッションなし" );
+                //一度もミッションに参加してない
+                //開催中のミッションを探す
+            }
+        } else {
+            console.log("未ログインまたは取得に失敗");
+            return;
+        }
+    };
  
     return data;
 });

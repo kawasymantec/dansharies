@@ -1,8 +1,28 @@
 <ons-page ng-controller="statusCtrl as ctrl">
         
     <ons-toolbar>
-        <div class="center">次回開催待ち</div>
+        <div class="center">アバター表示</div>
         <div class="right"><ons-toolbar-button ng-click="ctrl.logout();"><ons-icon icon="ion-android-close" size="28px"></ons-icon></ons-toolbar-button></div>
     </ons-toolbar>
-    <p>前回の結果を表示する</p>
+
+    <img src="img/avatorLv{{ctrl.lv}}.png" alt="アバター" style="width: 100%;"/>
+
+    <p>User {{ctrl.user}} は、
+    <p>Lv {{ctrl.lv}} だよ。</p>
+
+    <ons-row>
+        <ons-col style="margin:10px; text-align:center">
+                <img src="img/Medal_main_{{ctrl.mainMedal}}.png" alt="達成度">
+                <figcaption>達成度<br/>{{ctrl.mainCurrent}}/{{ctrl.mainNext}}</figcaption>
+        </ons-col>
+        <ons-col style="margin:10px; text-align:center">
+                <img src="img/Medal_game_{{ctrl.gameMedal}}.png" alt="遊び系">
+                <figcaption>遊び系<br/>{{ctrl.gameCurrent}}/{{ctrl.gameNext}}</figcaption>
+        </ons-col>
+        <ons-col style="margin:10px; text-align:center">
+                <img src="img/Medal_drink_{{ctrl.drinkMedal}}.png" alt="飲食系">
+                <figcaption>飲食系<br/>{{ctrl.drinkCurrent}}/{{ctrl.drinkNext}}</figcaption>
+        </ons-col>
+    </ons-row>
+
 </ons-page>
