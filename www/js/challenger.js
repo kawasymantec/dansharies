@@ -492,13 +492,13 @@ myApp.factory('challenger',function($http){
         var medal     = [ "N", "B", "S", "G" ];
 
         data.avatorStatus.lv           =  1;
-        data.avatorStatus.mainCurrent  =  0;
+        data.avatorStatus.mainCurrent  =  10;
         data.avatorStatus.mainMedal    =  medal[0];
         data.avatorStatus.mainNext     =  mainThre[1];
-        data.avatorStatus.gameCurrent  =  0;
+        data.avatorStatus.gameCurrent  =  20;
         data.avatorStatus.gameMedal    =  medal[0];
         data.avatorStatus.gameNext     =  otherThre[1];
-        data.avatorStatus.drinkCurrent =  0;
+        data.avatorStatus.drinkCurrent =  30;
         data.avatorStatus.drinkMedal   =  medal[0];
         data.avatorStatus.drinkNext    =  otherThre[1];
         
@@ -506,6 +506,7 @@ myApp.factory('challenger',function($http){
         data.avatorStatus.user = currentUser.userName+"("+currentUser.objectId+")";
 
 
+//                .equalTo("userid",currentUser.objectId)
 //                .equalTo("status","finish")
 //                .equalTo("result","success")
 
@@ -518,9 +519,22 @@ myApp.factory('challenger',function($http){
             if(currentMission){
                 console.log("前回参加ミッションID：" + currentMission.objectId);
                 //参加したミッションがある
-                Challengers.equalTo("userid",currentUser.objectId)
+
+                data.avatorStatus.gameCurrent = -3;
+
+                Challengers
                 .fetchAll()
                 .then(function(results){
+                    // ★TODO:入れない★
+                    
+                    data.avatorStatus.gameCurrent = -4;
+                
+                    if( results.length > 0 ){
+                        data.avatorStatus.gameCurrent = 100 + results.length;
+                    } else {
+                        data.avatorStatus.gameCurrent = -1;
+                    }
+                    
                     results.forEach(function(ret){
                         data.avatorStatus.mainCurrent  = data.avatorStatus.mainCurrent  + 1;
                         
@@ -532,7 +546,12 @@ myApp.factory('challenger',function($http){
                         
                     });
                     */
+                })
+                .catch(function(err){
+                    console.log(err);
+                    data.avatorStatus.gameCurrent = -100;
                 });
+
             }else{
                 console.log("前回参加ミッションなし" );
                 //一度もミッションに参加してない
