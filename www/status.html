@@ -5,8 +5,16 @@
         <div class="right"><ons-toolbar-button ng-click="ctrl.logout();"><ons-icon icon="ion-android-close" size="28px"></ons-icon></ons-toolbar-button></div>
     </ons-toolbar>
 
-    <img src="img/avatorLv{{ctrl.lv}}.png" alt="アバター" style="width: 100%;"/>
+    <!-- 背景＋アバターで別にする方法 {{ctrl.lv}} -->
+    <ons-row style="width:100%">
+        <ons-col style="background-image:url(img/backLv{{ctrl.blv}}.png); text-align:center; width:80%;
+                background-position: center center; background-repeat: no-repeat;">
+            <br/>
+            <img src="img/avatorOnlyLv{{ctrl.lv}}.png" alt="アバター" style="width:50%;">
+        </ons-col>
+    </ons-row>
 
+    <!-- デバッグ用 -->
     <p>User {{ctrl.user}} は、
     <p>Lv {{ctrl.lv}} だよ。</p>
 

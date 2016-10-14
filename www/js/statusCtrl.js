@@ -10,6 +10,7 @@ myApp.controller('statusCtrl',function($scope,challenger,$timeout){
     
     this.user = challenger.avatorStatus.user;
     this.lv   = challenger.avatorStatus.lv;
+    this.blv   = challenger.avatorStatus.blv;
 
     this.mainMedal    = challenger.avatorStatus.mainMedal;
     this.mainCurrent  = challenger.avatorStatus.mainCurrent;

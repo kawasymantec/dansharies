@@ -484,14 +484,17 @@ myApp.factory('challenger',function($http){
     data.calcAvatorStatus = function(success,failed){
         console.log("Challenger calcAvatorStatus");
 
-        // アバター、メダル(全体)、メダル(項目別)の変化するスレッショルド
-        // 現在、アバターは3種類、メダルは4種類存在する＋金メダルの時の分母
+        // アバター、背景、メダル(全体)、メダル(項目別)の変化するスレッショルド
+        // 現在、アバターは3種類、背景は3種類、メダルは4種類存在する＋金メダルの時の分母
         var lvThre    = [ 0, 1, 2 ];
+        var blvThre   = [ 0, 1, 2 ];
         var mainThre  = [ 0, 1, 2, 3, 100 ];
         var otherThre = [ 0, 1, 2, 3, 100 ];
         var medal     = [ "N", "B", "S", "G" ];
 
         data.avatorStatus.lv           =  1;
+        data.avatorStatus.blv          =  1;
+
         data.avatorStatus.mainCurrent  =  10;
         data.avatorStatus.mainMedal    =  medal[0];
         data.avatorStatus.mainNext     =  mainThre[1];
@@ -505,11 +508,9 @@ myApp.factory('challenger',function($http){
         var currentUser = data.ncmb.User.getCurrentUser();
         data.avatorStatus.user = currentUser.userName+"("+currentUser.objectId+")";
 
-
 //                .equalTo("userid",currentUser.objectId)
 //                .equalTo("status","finish")
 //                .equalTo("result","success")
-
 
         if (currentUser) {
             var Missions = data.ncmb.DataStore("missions");
