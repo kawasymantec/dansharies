@@ -521,6 +521,7 @@ myApp.factory('challenger',function($http){
                 //参加したミッションがある
 
                 data.avatorStatus.gameCurrent = -3;
+                // ★gameCurrent は -3 と表示されるため、次の処理の中に入れていない★
 
                 Challengers
                 .fetchAll()
