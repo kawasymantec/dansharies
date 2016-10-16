@@ -8,8 +8,7 @@ myApp.factory('challenger',function($http){
     var username = "";
     var password = "";
     // ここのキー情報を書き換えてください
-    data.ncmb = new NCMB("38b0271001ed27f11c37c96c48a22c3450b80531d8fe34691b840fa9fa78b276","aca37c2ba53f426e752addb2310361771343832ab94360c3dfae65b874d0932a");
-//    data.ncmb = new NCMB("4b88bd93e5559645c2bb49bf28d61955600bcba834647b2921be0e0b6d35349c","bc4389b1d9c193ce52772f59d6331f699a364a860826d4178e45ba3cb4334bb1");
+    data.ncmb = new NCMB("620f1b09c7cf8dcf9bd83752f77a3903c28deb74adb0053190d9cd968b4bbdce","5e25a9a66756aef9b7ac2f65b99c0132fb103cb48b3d54345ee4e17f520f51d7");
 
     //
     data.currentMission = null;
@@ -167,6 +166,19 @@ myApp.factory('challenger',function($http){
         /*
             ここにユーザIDの重複チェック処理を入れる by kodaka
         */
+        console.log("Checking duplicate userid");
+        data.ncmb.User.fetchAll("userName", userid)
+        .then(function(result){
+            // ログイン後処理
+            console.log("Found duplicate userid");
+            failed("The user name you specified was already used.")
+        })
+        .catch(function(err){
+          // エラー処理
+                console.log("Challenger login failed "  + err);
+                failed(err);
+        });
+        
         // 新規登録
         user.signUpByAccount()
             .then(function(){
@@ -181,8 +193,7 @@ myApp.factory('challenger',function($http){
             });
     };
     
-    data.baasurlbase = "https://mb.api.cloud.nifty.com/2013-09-01/applications/J2MyTSYNctp6tx7e/publicFiles/";
-//    data.baasurlbase = "https://mb.api.cloud.nifty.com/2013-09-01/applications/lML0I3RGoykDdhm/publicFiles/";
+    data.baasurlbase = "https://mb.api.cloud.nifty.com/2013-09-01/applications/xGpizk5NhMefcgtU/publicFiles/";
     /*
         ログイン中かどうかを返す
         true: ログイン中　false: 未ログイン
