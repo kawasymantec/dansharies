@@ -57,23 +57,65 @@ myApp.factory('challenger',function($http){
     */
     data.getActiveMission = function(success,failed){
         //開催中ミッションの情報を取得する
-        var Missions = data.ncmb.DataStore("missions");
-        //挑戦中か？
-        Missions.equalTo("status","active")
-        .order("createDate",true)
-        .fetchAll()
-        .then(function(results){
-            if(results.length>0){
-                success(results[0]);
+        data.getChallengedMission(function(challenged){
+            var Missions = data.ncmb.DataStore("missions");
+            if(challenged.length>0){
+                Missions.equalTo("status","active")
+                .notIn("objectId",challenged)
+                .order("createDate",true)
+                .fetchAll()
+                .then(function(results){
+                    if(results.length>0){
+                        success(results[0]);
+                    }else{
+                        failed("no mission");
+                    }
+                }).catch(function(err){
+                    console.log(err);
+                    failed(err);
+                });
             }else{
-                failed("no mission");
+                Missions.equalTo("status","active")
+                .order("createDate",true)
+                .fetchAll()
+                .then(function(results){
+                    if(results.length>0){
+                        success(results[0]);
+                    }else{
+                        failed("no mission");
+                    }
+                }).catch(function(err){
+                    console.log(err);
+                    failed(err);
+                });
             }
+        },failed);
+    };
+    
+    /*
+        参加済みミッションのリストをNCMBから取得する
+    */
+    data.getChallengedMission = function(success,failed){
+        //開催中ミッションの情報を取得する
+        var Challengers = data.ncmb.DataStore("challengers");
+        var currentUser = data.ncmb.User.getCurrentUser();
+        var challengedmission = [];
+        Challengers.equalTo("userid",currentUser.objectId)
+        .fetchAll()
+        .then(function(challenge){
+            if(challenge.length>0){
+                //ミッションIDのリストを作成
+                challengedmission = challenge.map(function(element, index, array) {
+                    return element.missionid;
+                });
+            }
+            success(challengedmission);
         }).catch(function(err){
             console.log(err);
             failed(err);
         });
     };
-    
+
     /*
         ログイン
     */
