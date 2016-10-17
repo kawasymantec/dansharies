@@ -163,9 +163,8 @@ myApp.factory('challenger',function($http){
         //ユーザー名・パスワードを設定
         user.set("userName", userid)
             .set("password",password);
-        /*
-            ここにユーザIDの重複チェック処理を入れる by kodaka
-        */
+            
+        //    ユーザIDの重複チェック処理        
         console.log("Checking duplicate userid");
         data.ncmb.User.equalTo("userName", userid)
         .fetchAll()
