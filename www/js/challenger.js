@@ -167,15 +167,17 @@ myApp.factory('challenger',function($http){
             ここにユーザIDの重複チェック処理を入れる by kodaka
         */
         console.log("Checking duplicate userid");
-        data.ncmb.User.fetchAll("userName", userid)
-        .then(function(result){
-            // ログイン後処理
-            console.log("Found duplicate userid");
-            failed("The user name you specified was already used.")
+        data.ncmb.User.equalTo("userName", userid)
+        .fetchAll()
+        .then(function(results){
+            if (results.length > 0){
+                console.log("Found duplicate userid");
+                failed("The user name you specified was already used.")
+            }
         })
         .catch(function(err){
           // エラー処理
-                console.log("Challenger login failed "  + err);
+                console.log("Check duplicate failed "  + err);
                 failed(err);
         });
         
