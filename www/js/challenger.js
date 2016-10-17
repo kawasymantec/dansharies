@@ -497,13 +497,15 @@ myApp.factory('challenger',function($http){
                 console.log("前回参加ミッションID：" + currentMission.objectId);
                 //参加したミッションがある
 
-                Challengers.equalTo("userid",currentUser.objectId)
-                .fetchAll()
+                Challengers
+                .equalTo("userid",currentUser.objectId)
+                .equalTo("status","finish")
+                .equalTo("result","success").fetchAll()
                 .then(function(results){
                     // 一致するデータの回数＝成功回数
                     avatorStatus.mainCurrent = results.length;
                     
-                    // ★TODO:種類の判定を行う必要有★
+                    // ★TODO:ミッションごとに種類を判定する必要有★
                     results.forEach(function(ret){
                         avatorStatus.drinkCurrent = avatorStatus.drinkCurrent + 1;
                     });
@@ -529,6 +531,3 @@ myApp.factory('challenger',function($http){
     return data;
 });
 
-//                .equalTo("userid",currentUser.objectId)
-//                .equalTo("status","finish")
-//                .equalTo("result","success")
