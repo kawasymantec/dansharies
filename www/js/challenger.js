@@ -10,10 +10,12 @@ myApp.factory('challenger',function($http){
     // ここのキー情報を書き換えてください
     data.ncmb = new NCMB("38b0271001ed27f11c37c96c48a22c3450b80531d8fe34691b840fa9fa78b276","aca37c2ba53f426e752addb2310361771343832ab94360c3dfae65b874d0932a");
 //    data.ncmb = new NCMB("4b88bd93e5559645c2bb49bf28d61955600bcba834647b2921be0e0b6d35349c","bc4389b1d9c193ce52772f59d6331f699a364a860826d4178e45ba3cb4334bb1");
+    //アプリケーションキー・クライアントキー
+//  data.ncmb = new NCMB("1c86df0315639d025352c9605c008b6923da7b4825c04595cbefde5425826f81","4861b858964d8842849b1bcd94c0442be08c0b34250c4b79cc96115e3a57319a");
 
     //
     data.currentMission = null;
-    
+
     /*
         参加中もしくは、最後に参加したミッションの情報を取得する
     */
@@ -183,7 +185,9 @@ myApp.factory('challenger',function($http){
     
     data.baasurlbase = "https://mb.api.cloud.nifty.com/2013-09-01/applications/J2MyTSYNctp6tx7e/publicFiles/";
 //    data.baasurlbase = "https://mb.api.cloud.nifty.com/2013-09-01/applications/lML0I3RGoykDdhm/publicFiles/";
-    /*
+//    data.baasurlbase = "https://mb.api.cloud.nifty.com/2013-09-01/applications/HRXHqc5QIzTcC1zL/publicFiles/";
+
+/*
         ログイン中かどうかを返す
         true: ログイン中　false: 未ログイン
     */
@@ -510,8 +514,62 @@ myApp.factory('challenger',function($http){
                failed(err);
              });
         
-    }
+    };
     
+    /*
+        西島がアバター表示用のデータを取得するために作成
+    */
+    data.getAvatorStatus = function(success,failed){
+        console.log("Challenger getAvatorStatus");
+
+        var avatorStatus = {};
+        avatorStatus.mainCurrent  =  0;
+        avatorStatus.gameCurrent  =  0;
+        avatorStatus.drinkCurrent =  0;
+        
+        var currentUser = data.ncmb.User.getCurrentUser();
+        avatorStatus.user = currentUser.userName+"("+currentUser.objectId+")";
+
+        if (currentUser) {
+            var Missions = data.ncmb.DataStore("missions");
+            var Challengers = data.ncmb.DataStore("challengers");
+            var currentMission = data.currentMission;
+            var currentMissionResult = "";
+            if(currentMission){
+                console.log("前回参加ミッションID：" + currentMission.objectId);
+                //参加したミッションがある
+
+                Challengers
+                .equalTo("userid",currentUser.objectId)
+                .equalTo("status","finish")
+                .equalTo("result","success").fetchAll()
+                .then(function(results){
+                    // 一致するデータの回数＝成功回数
+                    avatorStatus.mainCurrent = results.length;
+                    
+                    // ★TODO:ミッションごとに種類を判定する必要有★
+                    results.forEach(function(ret){
+                        avatorStatus.drinkCurrent = avatorStatus.drinkCurrent + 1;
+                    });
+                    success(avatorStatus);
+                })                
+                .catch(function(err){
+                    console.log("getAvatorStatus query err");
+                    failed("query err");
+                });
+            }else{
+                console.log("前回参加ミッションなし" );
+                //一度もミッションに参加してない
+                //開催中のミッションを探す
+                success(avatorStatus);
+                //初期値のまま表示
+            }
+        } else {
+            console.log("未ログインまたは取得に失敗");
+            return;
+        }
+    };
  
     return data;
 });
+

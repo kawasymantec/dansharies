@@ -15,7 +15,9 @@ myApp.controller('topCtrl',function($scope,challenger,$timeout){
             case 'Wait':    //ミッション待ち
                 console.log("topCtrl init...wait");
                 $timeout(function() {
-                    myNavigator.replacePage('entry.html',{ animation: 'none'});        
+                    myNavigator.replacePage('entry.html',{ animation: 'none'});
+                    // 西島デバッグ用
+                    //myNavigator.replacePage('status.html',{ animation: 'none'});
                 },100);
                 break;
             case 'Challenge':    //ミッション挑戦中
