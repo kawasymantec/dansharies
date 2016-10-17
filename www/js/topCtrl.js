@@ -47,7 +47,7 @@ myApp.controller('topCtrl',function($scope,challenger,$timeout){
             case 'Idle':    //チャレンジすべきものがない
                 console.log("topCtrl init...Idle");
                 $timeout(function() {
-                    myNavigator.replacePage('idle.html',{ animation: 'none'});        
+                    myNavigator.replacePage('status.html',{ animation: 'none'});        
                 },100);
                 break;
             default:
