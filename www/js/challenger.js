@@ -11,14 +11,10 @@ myApp.factory('challenger',function($http){
 //    data.ncmb = new NCMB("38b0271001ed27f11c37c96c48a22c3450b80531d8fe34691b840fa9fa78b276","aca37c2ba53f426e752addb2310361771343832ab94360c3dfae65b874d0932a");
 //    data.ncmb = new NCMB("4b88bd93e5559645c2bb49bf28d61955600bcba834647b2921be0e0b6d35349c","bc4389b1d9c193ce52772f59d6331f699a364a860826d4178e45ba3cb4334bb1");
     //アプリケーションキー・クライアントキー
-    data.ncmb = new NCMB("1c86df0315639d025352c9605c008b6923da7b4825c04595cbefde5425826f81","4861b858964d8842849b1bcd94c0442be08c0b34250c4b79cc96115e3a57319a");
+  data.ncmb = new NCMB("1c86df0315639d025352c9605c008b6923da7b4825c04595cbefde5425826f81","4861b858964d8842849b1bcd94c0442be08c0b34250c4b79cc96115e3a57319a");
 
     //
     data.currentMission = null;
-    
-    // 西島がアバター用に追加
-    data.avatorStatus = {};
-
 
     /*
         参加中もしくは、最後に参加したミッションの情報を取得する
@@ -481,36 +477,16 @@ myApp.factory('challenger',function($http){
     /*
         西島がアバター表示用のデータを取得するために作成
     */
-    data.calcAvatorStatus = function(success,failed){
-        console.log("Challenger calcAvatorStatus");
+    data.getAvatorStatus = function(success,failed){
+        console.log("Challenger getAvatorStatus");
 
-        // アバター、背景、メダル(全体)、メダル(項目別)の変化するスレッショルド
-        // 現在、アバターは3種類、背景は3種類、メダルは4種類存在する＋金メダルの時の分母
-        var lvThre    = [ 0, 1, 2 ];
-        var blvThre   = [ 0, 1, 2 ];
-        var mainThre  = [ 0, 1, 2, 3, 100 ];
-        var otherThre = [ 0, 1, 2, 3, 100 ];
-        var medal     = [ "N", "B", "S", "G" ];
-
-        data.avatorStatus.lv           =  1;
-        data.avatorStatus.blv          =  1;
-
-        data.avatorStatus.mainCurrent  =  10;
-        data.avatorStatus.mainMedal    =  medal[0];
-        data.avatorStatus.mainNext     =  mainThre[1];
-        data.avatorStatus.gameCurrent  =  20;
-        data.avatorStatus.gameMedal    =  medal[0];
-        data.avatorStatus.gameNext     =  otherThre[1];
-        data.avatorStatus.drinkCurrent =  30;
-        data.avatorStatus.drinkMedal   =  medal[0];
-        data.avatorStatus.drinkNext    =  otherThre[1];
+        var avatorStatus = {};
+        avatorStatus.mainCurrent  =  0;
+        avatorStatus.gameCurrent  =  0;
+        avatorStatus.drinkCurrent =  0;
         
         var currentUser = data.ncmb.User.getCurrentUser();
-        data.avatorStatus.user = currentUser.userName+"("+currentUser.objectId+")";
-
-//                .equalTo("userid",currentUser.objectId)
-//                .equalTo("status","finish")
-//                .equalTo("result","success")
+        avatorStatus.user = currentUser.userName+"("+currentUser.objectId+")";
 
         if (currentUser) {
             var Missions = data.ncmb.DataStore("missions");
@@ -521,43 +497,28 @@ myApp.factory('challenger',function($http){
                 console.log("前回参加ミッションID：" + currentMission.objectId);
                 //参加したミッションがある
 
-                data.avatorStatus.gameCurrent = -3;
-                // ★gameCurrent は -3 と表示されるため、次の処理の中に入れていない★
-
-                Challengers
+                Challengers.equalTo("userid",currentUser.objectId)
                 .fetchAll()
                 .then(function(results){
-                    // ★TODO:入れない★
+                    // 一致するデータの回数＝成功回数
+                    avatorStatus.mainCurrent = results.length;
                     
-                    data.avatorStatus.gameCurrent = -4;
-                
-                    if( results.length > 0 ){
-                        data.avatorStatus.gameCurrent = 100 + results.length;
-                    } else {
-                        data.avatorStatus.gameCurrent = -1;
-                    }
-                    
+                    // ★TODO:種類の判定を行う必要有★
                     results.forEach(function(ret){
-                        data.avatorStatus.mainCurrent  = data.avatorStatus.mainCurrent  + 1;
-                        
-                        /* TODO:種類の判定を行う必要有 */
-                        data.avatorStatus.drinkCurrent = data.avatorStatus.drinkCurrent + 1;
+                        avatorStatus.drinkCurrent = avatorStatus.drinkCurrent + 1;
                     });
-                    /*
-                    mainThre.reverse().forEach(function(ret){
-                        
-                    });
-                    */
-                })
+                    success(avatorStatus);
+                })                
                 .catch(function(err){
-                    console.log(err);
-                    data.avatorStatus.gameCurrent = -100;
+                    console.log("getAvatorStatus query err");
+                    failed("query err");
                 });
-
             }else{
                 console.log("前回参加ミッションなし" );
                 //一度もミッションに参加してない
                 //開催中のミッションを探す
+                success(avatorStatus);
+                //初期値のまま表示
             }
         } else {
             console.log("未ログインまたは取得に失敗");
@@ -567,3 +528,7 @@ myApp.factory('challenger',function($http){
  
     return data;
 });
+
+//                .equalTo("userid",currentUser.objectId)
+//                .equalTo("status","finish")
+//                .equalTo("result","success")
