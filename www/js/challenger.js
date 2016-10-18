@@ -172,26 +172,27 @@ myApp.factory('challenger',function($http){
             if (results.length > 0){
                 console.log("Found duplicate userid");
                 failed("The user name you specified was already used.")
+            } else {
+
+        	// 新規登録
+            user.signUpByAccount()
+                .then(function(){
+                    // 登録後処理
+                    console.log("Challenger signup success");
+                    success();
+                })
+                .catch(function(err){
+                // エラー処理
+                    console.log("Challenger signup failed" + err);
+                    failed(err);
+                });
             }
         })
         .catch(function(err){
           // エラー処理
                 console.log("Check duplicate failed "  + err);
                 failed(err);
-        });
-        
-        // 新規登録
-        user.signUpByAccount()
-            .then(function(){
-              // 登録後処理
-                console.log("Challenger signup success");
-                success();
-            })
-            .catch(function(err){
-              // エラー処理
-                console.log("Challenger signup failed" + err);
-                failed(err);
-            });
+        });        
     };
     
     data.baasurlbase = "https://mb.api.cloud.nifty.com/2013-09-01/applications/xGpizk5NhMefcgtU/publicFiles/";
