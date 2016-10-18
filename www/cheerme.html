@@ -3,8 +3,17 @@
     <ons-toolbar>
         <div class="center">はげまされる</div>
     </ons-toolbar>
+    
     <p>はげましのメッセージ</p>
     <img src="{{ctrl.img}}" alt="" style="width: 100%;"/>
+
+    <ons-row align="bottom">
+        <ons-col style="margin:10px;"> 
+            <fieldset style="border-radius: 10px;"><legend><strong><font color="#ff0000" >{{ctrl.username}}から応援が届いているよ!!!</font></strong></legend>
+                <div> {{ctrl.message}} </div>
+            </fieldset>
+       </ons-col>
+    </ons-row>　
 
     <ons-button modifier="large" ng-click="myNavigator.popPage();">
     戻る    
