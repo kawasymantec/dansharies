@@ -164,25 +164,25 @@ myApp.factory('challenger',function($http){
         user.set("userName", userid)
             .set("password",password);
             
-        //    ユーザIDの重複チェック処理        
+        // ユーザIDの重複チェック処理        
         console.log("Checking duplicate userid");
-        data.ncmb.User.equalTo("userName", userid)
+        user.equalTo("userName", userid)
         .fetchAll()
         .then(function(results){
+            console.log("Found " + results.length + " users.");
             if (results.length > 0){
                 console.log("Found duplicate userid");
-                failed("The user name you specified was already used.")
+                failed("The user name you specified was already used.");
             } else {
-
-        	// 新規登録
-            user.signUpByAccount()
-                .then(function(){
+                // 新規登録
+                user.signUpByAccount()
+                    .then(function(){
                     // 登録後処理
                     console.log("Challenger signup success");
                     success();
                 })
                 .catch(function(err){
-                // エラー処理
+                    // エラー処理
                     console.log("Challenger signup failed" + err);
                     failed(err);
                 });
@@ -192,7 +192,7 @@ myApp.factory('challenger',function($http){
           // エラー処理
                 console.log("Check duplicate failed "  + err);
                 failed(err);
-        });        
+        });
     };
     
     data.baasurlbase = "https://mb.api.cloud.nifty.com/2013-09-01/applications/xGpizk5NhMefcgtU/publicFiles/";
