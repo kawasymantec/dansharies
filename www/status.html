@@ -1,6 +1,7 @@
 <ons-page ng-controller="statusCtrl as ctrl">
         
     <ons-toolbar>
+        <div class="left"><ons-toolbar-button ng-click="ctrl.backStatus();"><ons-icon icon="ion-android-arrow-dropleft-circle" size="28px"></ons-icon></ons-toolbar-button></div>
         <div class="center">アバター表示</div>
         <div class="right"><ons-toolbar-button ng-click="ctrl.logout();"><ons-icon icon="ion-android-close" size="28px"></ons-icon></ons-toolbar-button></div>
     </ons-toolbar>

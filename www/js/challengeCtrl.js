@@ -14,6 +14,7 @@ myApp.controller('challengeCtrl',function($scope,challenger,$timeout){
     this.totalChallenger = "-";
     var target = this;
     var cheerme_times = 0;
+
     challenger.GetChallengerCount(challenger.currentMission.objectId,function(active,total){
         console.log("challengeCtrl challenger Count!");
         $timeout(function() {
@@ -69,6 +70,14 @@ myApp.controller('challengeCtrl',function($scope,challenger,$timeout){
         });
 */
     };
+    
+    // 西島が追加
+    this.goStatus = function(){
+        console.log("challengeCtrl goStatus");
+        //myNavigator.pushPage('cheermeHirose.html',{ animation: 'none'});
+        // あえてアニメーション
+        myNavigator.pushPage('status.html');        
+    }
     
     this.logout = function(){
         console.log("challengeCtrl logout");
