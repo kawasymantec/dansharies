@@ -528,8 +528,7 @@ myApp.factory('challenger',function($http){
         avatorStatus.drinkCurrent =  0;
         
         var currentUser = data.ncmb.User.getCurrentUser();
-        // デバッグ用
-        //avatorStatus.user = currentUser.userName+"("+currentUser.objectId+")";
+        avatorStatus.user = currentUser.userName;
 
         if (currentUser) {
             var Missions = data.ncmb.DataStore("missions");

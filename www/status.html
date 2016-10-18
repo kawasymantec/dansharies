@@ -1,7 +1,9 @@
 <ons-page ng-controller="statusCtrl as ctrl">
         
     <ons-toolbar>
-        <div class="center">アバター表示</div>
+        <!-- TODO：GO MISSION ボタンを追加する -->
+
+        <div class="center">{{ctrl.user}}</div>
         <div class="right"><ons-toolbar-button ng-click="ctrl.logout();"><ons-icon icon="ion-android-close" size="28px"></ons-icon></ons-toolbar-button></div>
     </ons-toolbar>
 
