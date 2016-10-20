@@ -31,33 +31,84 @@
 //		var Challengers = data.ncmb.DataStore("challengers");
 //		var currentUser = data.ncmb.User.getCurrentUser();
 //		var currentMissionResult = "";
-		var Missions = {};
+		var MissionDataStore = {};
+		var missions = {};
 		var dateList = ["2016-10-19"];
 
 
 		$(function() {
 
-			connectServer("kawashima");
-			updateMissionList();
-			updateDatepicker(["2016-10-19"]);
+			connectServer("kawashima",function(results_missions){
+				missions = results_missions;
+				updateMissionList();
+				updateDatepicker(["2016-10-19"]);				
+			});
+
+			// EventHandlers
+			$("#server").change(function(){
+				var serverID = $(this).val();
+				connectServer(serverID,function(results_missions){
+					missions = results_missions;
+					updateMissionList();
+					updateDatepicker(["2016-10-19"]);
+				});
+			});
+
+			$("#makeNewMission").click(function(){
+				var lastMission = missions[0];
+				if(!lastMission){
+					console.log("lastMission not found");
+					return;
+				}
+
+				var lastNo = lastMission.missionNo;
+				if(!lastNo){
+					console.log("lastNo not found");
+					return;					
+				}
+				if(lastNo == "undefined"){
+					console.log("lastNo is undefined");
+				}
+
+				var newMissionNo;
+				if(lastNo.substr(0,1) == "M"){
+					var number = lastNo.substr(1);
+					newMissionNo = "M" + ("0000"+ (Number(number) + 1)).slice(-4);
+				} else {
+					newMissionNo = lastNo + 1;
+				}
+				$("#missionNo").html(newMissionNo);
+			})
+
+
+
+
+
 
 		});
 
-		function connectServer(serverID){
+
+
+
+		function connectServer(serverID, success){
 			data.ncmb = new NCMB(servers[serverID].appKey,servers[serverID].clientKey);
+			MissionDataStore = data.ncmb.DataStore("missions");
+			MissionDataStore.order("createDate",true)    // TODO: 開始日時順にしたほうがいい。XXX:undefinedの扱い
+			.fetchAll()
+			.then(function(results){
+				success(results);
+			}).catch(function(err){
+				console.log(err);
+			});
 		}
 
 		function updateMissionList(){
-			Missions = data.ncmb.DataStore("missions");
-			Missions.order("createDate",true)
-			.fetchAll()
-			.then(function(results){
-			   if(results.length>0){
+			   if(missions.length>0){
 			   	var th = "<tr><td>ミッションNo</td><td>タイトル</td><td>カテゴリ</td><td>説明</td><td>応援コメント</td><td>状態</td><td>開始</td><td>終了</td></tr>";
 
 					$("#missionList").html(th);
-			   	for(var i = 0; i < results.length; i++){
-			   		var mission = results[i];
+			   	for(var i = 0; i < missions.length; i++){
+			   		var mission = missions[i];
 						var tr = "<tr id='mission_" + i + "'><td>"
 						 + mission.missionNo + "</td><td>"
 						 + mission.title + "</td><td>"
@@ -75,9 +126,7 @@
 					$("#missionList").append(example);
 					console.log("no missions");
 			   }
-			}).catch(function(err){
-				console.log(err);
-			});
+
 		}
 
 
@@ -120,9 +169,9 @@
 <div>
 <!--  サーバ選択      TODO: NCMBとのつなぎ -->
 サーバ情報
-	<select id="server" type="text" name="server">
-		<option>sumioka</option>
-		<option>active</option>
+	<select id="server" name="server">
+		<option value="kawashima">kawashima</option>
+		<option value="sumioka">sumioka</option>
 	</select>
 </div>
 
@@ -136,7 +185,7 @@
 <div id="mission">
 <table>
 	<tr>
-		<td>ミッションNo：</td><td><span id="missionNo" type="text" name="missionNo">未選択</span>	<button>新規作成</button></td>
+		<td>ミッションNo：</td><td><span id="missionNo" type="text" name="missionNo">未選択</span>	<button id="makeNewMission">番号新規作成</button></td>
 	</tr><tr>
 		<td>日付:</td><td><input type="text" id="date_val"/></td>
 	</tr><tr>
