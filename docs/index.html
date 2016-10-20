@@ -1,0 +1,125 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link type="text/css" rel="stylesheet" href="lib/jquery-ui-1.12.1.custom/jquery-ui.css" />
+	<link type="text/css" rel="stylesheet" href="lib/jquery-ui-1.12.1.custom/jquery-ui.structure.css" />
+<!--
+	<link type="text/css" rel="stylesheet" href="lib/jquery-ui-1.12.1.custom/jquery-ui.theme.css" />
+	-->
+	<link type="text/css" rel="stylesheet" href="css/style.css" />
+	<script type="text/javascript" src="lib/jquery-1.12.4.min.js"></script>
+	<script type="text/javascript" src="lib/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+
+	<script type="text/javascript">
+		$(function() {
+
+			var dateList = ["2016-10-19"];
+
+			$("#datepicker").datepicker({
+				// 日付が選択された時、日付をテキストフィールドへセット
+				onSelect: function(dateText, inst) {
+					$("#date_val").val(dateText);
+				},
+				// 既にイベントが入っている所を太字で表示
+				beforeShowDay: function(date) {
+					var ncmbDateStr = createNcmbDateStr(date);
+					if (dateList.indexOf(ncmbDateStr) != -1) {
+						// 選択可能、太字
+						return [true, 'datepicker-event-exist', ''];
+					} else {
+						return [true, 'datepicker-event-not-exist'];
+					}
+				}
+			});
+		});
+
+		function createNcmbDateStr(date) {
+			var year = date.getYear();
+			var month = date.getMonth() + 1;
+			var day = date.getDate();
+			if (year < 2000) { year += 1900 };
+			if (month < 10)  { month = "0" + month };
+			if (day < 10)    { day = "0" + day };
+
+			var dateStr = year + "-" + month + "-" + day;
+			return dateStr;
+		}
+
+	</script>
+</head>
+<body>
+<div>
+<!--  サーバ選択      TODO: NCMBとのつなぎ -->
+サーバ情報
+	<select id="server" type="text" name="server">
+		<option>sumioka</option>
+		<option>active</option>
+	</select>
+</div>
+
+<!--  日付を選択       -->
+<div id="datepicker"></div>
+<br/>
+<p>日付: <input type="text" id="date_val"/></p>
+
+
+
+<!--   TODO: それぞれのつなぎ　-->
+<div id="thisweek">
+◆現在または次回のミッション
+	<select id="thisweek_missionNo" type="text" name="missionNo">
+		<option>active</option>
+		<option>active</option>
+		<option>active</option>
+		<option>active</option>
+		<option>active</option>
+	</select>		
+	<input id="thisweek_title" type="text" name="title"/>
+	<input id="thisweek_description" type="text" name="description"/>
+	<input id="thisweek_tips" type="text" name="tips"/>
+	<select id="thisweek_status" type="text" name="status">
+		<option>active</option>
+		<option>active</option>
+		<option>active</option>
+		<option>active</option>
+		<option>active</option>
+	</select>
+	<input id="thisweek_start_datetime" type="text" name="start_datetime"/>2016-10-18T00:00:00.000Z
+	<input id="thisweek_end_datetime" type="text" name="end_datetime"/>2016-10-18T09:00:00.000Z
+	<input id="thisweek_entry_syutsudai" name="entry_syutsudai" type="file"/>
+	<input id="thisweek_entry_ouen" name="entry_ouen" type="file"/>
+
+	<button>新規作成</button>
+	<button>更新</button>
+</div>
+
+
+<div id="new_mission">
+◆ミッション登録
+	<input id="new_missionNo" type="text" name="missionNo"/>
+	<input id="new_title" type="text" name="title"/>
+	<input id="new_description" type="text" name="description"/>
+	<input id="new_tips" type="text" name="tips"/>
+	<select id="new_status" type="text" name="status">
+		<option>active</option>
+		<option>active</option>
+		<option>active</option>
+		<option>active</option>
+		<option>active</option>
+	</select>
+	<input id="new_start_datetime" type="text" name="start_datetime"/>2016-10-18T00:00:00.000Z
+	<input id="new_end_datetime" type="text" name="end_datetime"/>2016-10-18T09:00:00.000Z
+	<input id="new_entry_syutsudai" name="entry_syutsudai" type="file"/>
+	<input id="new_entry_ouen" name="entry_ouen" type="file"/>
+
+	<button>更新</button>
+</div>
+
+
+ミッション一覧
+
+	<>
+</body>
+</html>

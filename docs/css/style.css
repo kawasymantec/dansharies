@@ -1,0 +1,9 @@
+.datepicker-event-exist .ui-state-default {
+	color: #1c94c4;
+	font-weight: bold;
+}
+
+.datepicker-event-not-exist .ui-state-default{
+	color: #000000;
+	font-weight: normal;
+}
