@@ -8,7 +8,28 @@
     
     <img src="img/str_challenge.png" alt="挑戦中"/><br/>
     {{ctrl.title}}<br/><br/>
-    <img src="img/challenge.png" alt="挑戦中" style="width: 100%;"/>
+    <!-- 
+        <img src="img/challenge.png" alt="挑戦中" style="width: 100%;"/>
+     -->
+    <!-- 常にLv1を表示中 -->
+    <ons-row style="width:100%">
+        <ons-col style="text-align:center;">
+            <br/><br/><br/><img src="img/other_hito.png" alt="人" style="width:30%;">
+        </ons-col>
+        <ons-col style="text-align:left;">
+            <br/><br/><img src="img/other_hito.png" alt="人" style="width:50%;">
+        </ons-col>
+        <ons-col style="text-align:center; align: center">
+            <img src="img/avatorOnlyLv2.png" alt="アバター" style="width:100%;">
+        </ons-col>
+        <ons-col style="text-align:right;">
+            <br/><br/><img src="img/other_hito.png" alt="人" style="width:50%;">
+        </ons-col>
+        <ons-col style="text-align:center;">
+            <br/><br/><br/><img src="img/other_hito.png" alt="人" style="width:30%;">
+        </ons-col>
+    </ons-row>
+    
     <p>挑戦中 {{ctrl.activeChallenger}}人/ {{ctrl.totalChallenger}}人</p>
 
     <ons-row>
