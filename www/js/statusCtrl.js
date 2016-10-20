@@ -66,6 +66,19 @@ myApp.controller('statusCtrl',function($scope,challenger,$timeout){
         //$timeout(function() {},100);
     });
 
+
+    // 西島が追加
+    this.backStatus = function(){
+        console.log("statusCtrl backStatus");
+        //myNavigator.pushPage('cheermeHirose.html',{ animation: 'none'});
+        // あえてアニメーション
+        myNavigator.popPage();
+        /*
+            ★問題：ミッション受けていない場合には、アバター画面の「戻る」が機能しない。
+        */
+    }
+
+
     target.logout = function(){
         console.log("statusCtrl logout");
         myNavigator.replacePage('logout.html',{ animation: 'none'});

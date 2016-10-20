@@ -1,10 +1,11 @@
 <ons-page ng-controller="challengeCtrl as ctrl">
         
     <ons-toolbar>
+        <div class="left"><ons-toolbar-button ng-click="ctrl.goStatus();"><ons-icon icon="ion-android-person" size="28px"></ons-icon></ons-toolbar-button></div>
         <div class="center">挑戦中！</div>
         <div class="right"><ons-toolbar-button ng-click="ctrl.logout();"><ons-icon icon="ion-android-close" size="28px"></ons-icon></ons-toolbar-button></div>
     </ons-toolbar>
-
+    
     <img src="img/str_challenge.png" alt="挑戦中"/><br/>
     {{ctrl.title}}<br/><br/>
     <img src="img/challenge.png" alt="挑戦中" style="width: 100%;"/>

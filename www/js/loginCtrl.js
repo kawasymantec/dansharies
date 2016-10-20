@@ -15,6 +15,8 @@ myApp.controller('loginCtrl',function($scope,challenger){
         challenger.login(this.username,this.password,function(){
             //成功
             myNavigator.replacePage('top.html',{ animation: 'none'});
+            //最初に表示されるのをアバター画面にします
+            //myNavigator.replacePage('status.html',{ animation: 'none'});
         },function(){
             //失敗
 //            myNavigator.replacePage('challenge.html',{ animation: 'none'});            
