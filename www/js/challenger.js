@@ -546,11 +546,17 @@ myApp.factory('challenger',function($http){
                 .then(function(results){
                     // 一致するデータの回数＝成功回数
                     avatorStatus.mainCurrent = results.length;
-                    
-                    // ★TODO:ミッションごとに種類を判定する必要有★
+                /* 未テスト                    
+                    // ミッションごとに種類を判定する必要有
                     results.forEach(function(ret){
-                        avatorStatus.drinkCurrent = avatorStatus.drinkCurrent + 1;
+                        switch(ret.type){
+                        case 'game':
+                            avatorStatus.gameCurrent = avatorStatus.gameCurrent + 1;
+                        case 'drink':
+                            avatorStatus.drinkCurrent = avatorStatus.drinkCurrent + 1;
+                        }
                     });
+                */
                     success(avatorStatus);
                 })                
                 .catch(function(err){
