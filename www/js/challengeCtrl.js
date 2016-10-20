@@ -15,6 +15,10 @@ myApp.controller('challengeCtrl',function($scope,challenger,$timeout){
     var target = this;
     var cheerme_times = 0;
 
+    // 西島が追加
+    /* ★TODO: 本当は正しいレベルを取得する必要がある */
+    this.lv=1;
+
     challenger.GetChallengerCount(challenger.currentMission.objectId,function(active,total){
         console.log("challengeCtrl challenger Count!");
         $timeout(function() {
