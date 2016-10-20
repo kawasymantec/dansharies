@@ -310,7 +310,7 @@ myApp.factory('challenger',function($http){
     /*
         ミッションに参加する
     */
-    data.MissionStart = function(mission_id,success,failed){
+    data.MissionStart = function(mission_id,category,success,failed){
         console.log("Challenger MissionStart");
         var Challengers = data.ncmb.DataStore("challengers");
         var challengers = new Challengers();
@@ -318,6 +318,7 @@ myApp.factory('challenger',function($http){
         challengers.set("missionid", mission_id)
              .set("userid", currentUser.objectId)
              .set("username", currentUser.userName)
+             .set("category", category)
              .set("status", "")
              .set("result", "")
              .save()
@@ -336,7 +337,7 @@ myApp.factory('challenger',function($http){
     /*
         ミッションへの参加を拒否する
     */
-    data.MissionRefuse = function(mission_id,success,failed){
+    data.MissionRefuse = function(mission_id,category,success,failed){
         //スポットデータの初期化
         console.log("Challenger MissionRefuse");
         var Challengers = data.ncmb.DataStore("challengers");
@@ -345,6 +346,7 @@ myApp.factory('challenger',function($http){
         challengers.set("missionid", mission_id)
             .set("userid", currentUser.objectId)
             .set("username", currentUser.userName)
+            .set("category", category)
             .set("status", "refuse")
             .set("result", "refuse")
             .save()
