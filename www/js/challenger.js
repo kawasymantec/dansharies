@@ -551,17 +551,28 @@ myApp.factory('challenger',function($http){
                 .then(function(results){
                     // 一致するデータの回数＝成功回数
                     avatorStatus.mainCurrent = results.length;
-                    
-                    // 未テスト
+
+                    /* 
+                    // TODO: ★達成したミッションのカテゴリに応じた表示を行う
+                    // 今引いているのは、Challengersなので Missions の情報は入っていない
                     // ミッションごとに種類を判定する必要有
-                    results.forEach(function(ret){
-                        switch(ret.type){
+                    for( var i=0; i<results.length; i++ ){
+                        var ret = {};
+                        ret = results[i];
+                        switch(ret.category){
                         case 'game':
                             avatorStatus.gameCurrent = avatorStatus.gameCurrent + 1;
-                        case 'drink':
+                            break;
+                        case 'food':
                             avatorStatus.drinkCurrent = avatorStatus.drinkCurrent + 1;
+                            break;
                         }
-                    }); 
+                    } 
+                    */
+                    // 代わりに、全ミッションを drink メダルに入れる
+                    avatorStatus.drinkCurrent = results.length;
+                    
+                    
                     success(avatorStatus);
                 })                
                 .catch(function(err){
