@@ -53,11 +53,11 @@ myApp.controller('challengeCtrl',function($scope,challenger,$timeout){
     this.cheerMe = function(){
         console.log("challengeCtrl cheerMe");
         cheerme_times++;
-        if(cheerme_times % 5 == 0){            
-            myNavigator.pushPage('cheermeHirose.html',{ animation: 'none'});        
-        } else {
+    //    if(cheerme_times % 5 == 0){            
+    //        myNavigator.pushPage('cheermeHirose.html',{ animation: 'none'});        
+    //    } else {
             myNavigator.pushPage('cheerme.html',{ animation: 'none'});        
-        }
+    //    }
 /*        //だれかの応援メッセージが届く
         //メッセージ入力
         challenger.ChallengeGetCheer(challenger.currentMission.objectId,function(cheer){
