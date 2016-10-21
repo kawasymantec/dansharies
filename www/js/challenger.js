@@ -566,12 +566,11 @@ myApp.factory('challenger',function($http){
         }
     };
 
-    /*
     // 西島（↑の getAvatorStatus と処理が被っているので、バグになりやすい注意）
     // Lvだけの計算用に取得関数
     data.getAvatorLv = function(success,failed){
         console.log("Challenger getAvatorLv");
-        var Lv = {};
+        var avatorStatus = {};
         avatorStatus.mainCurrent  =  0;
 
         var currentUser = data.ncmb.User.getCurrentUser();
@@ -610,7 +609,6 @@ myApp.factory('challenger',function($http){
             return;
         }
     };
-    */
     
     // 達成回数からLvを計算する関数
     /* それぞれのレベルアップ具合
