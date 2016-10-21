@@ -1,11 +1,25 @@
 // This is a JavaScript file
 
 
-myApp.controller('successCtrl',function($scope,challenger){
+myApp.controller('successCtrl',function($scope,challenger,$timeout){
     "use strict";
     console.log("successCtrl init!");
     this.title = "NO SODA DAY";
     this.comment = "";
+    
+    /********************************************************/
+    // 西島：色々なページでLvを取得するための機構
+    var target = this;
+    challenger.getAvatorStatus(function(avatorStatus){
+        $timeout(function() {
+            var lvData          = challenger.calcLv(avatorStatus.mainCurrent);
+            target.lv           = lvData.lv;
+        },100);
+    },function(err){
+        console.log(err);
+        //$timeout(function() {},100);
+    });
+    /********************************************************/
 
     //コメント登録
     this.registComment = function(){
