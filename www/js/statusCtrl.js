@@ -66,9 +66,6 @@ myApp.controller('statusCtrl',function($scope,challenger,$timeout){
             var lvData = challenger.calcLv(target.mainCurrent);
             target.lv  = lvData.lv;
             target.blv = lvData.blv;
-
-            target.user = avatorStatus.user + ":" + target.lv + ":" + target.blv;
-
         },100);
     },function(err){
         console.log(err);
