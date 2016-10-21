@@ -4,11 +4,24 @@
         <div class="center">Mission終了</div>
     </ons-toolbar>
     <p> </p>
+    <!-- 
     <img src="img/input_result.png" alt="で、どうだった？" style="width: 100%;"/>
-        <ons-row>
+     -->
+    <!-- 背景＋アバターで別にする方法 {{ctrl.lv}} -->
+    <ons-row style="width:100%; height:260px">
+        <ons-col style="background-image:url(img/back_fire.png); text-align:center;
+                background-position: center bottom; background-repeat: no-repeat;">
+            <p style="text-align:left; font-size:xx-large; font-weight : bold">　達成できた？</p>
+            <img src="img/avatorOnlyLv{{ctrl.lv}}.png" alt="アバター" style="height:160px">
+        </ons-col>
+    </ons-row>
+    <p> </p>
+    <!-- 「達成」「成功」どちらの文面が良いか？ -->
+
+    <ons-row>
         <ons-col style="margin:10px;">
             <ons-button modifier="large" ng-click="ctrl.success();">
-            成功した
+            達成した
             </ons-button>
         </ons-col>
         <ons-col style="margin:10px;" >
