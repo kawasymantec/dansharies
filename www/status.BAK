@@ -1,0 +1,80 @@
+<<<<<<< HEAD
+<ons-page ng-controller="statusCtrl as ctrl">
+        
+    <ons-toolbar>
+        <!-- TODO：GO MISSION ボタンを追加する -->
+
+        <div class="center">{{ctrl.user}}</div>
+        <div class="right"><ons-toolbar-button ng-click="ctrl.logout();"><ons-icon icon="ion-android-close" size="28px"></ons-icon></ons-toolbar-button></div>
+    </ons-toolbar>
+
+    <!-- 背景＋アバターで別にする方法 {{ctrl.lv}} -->
+    <ons-row>
+        <ons-col style="background-image:url(img/backLv{{ctrl.blv}}.png); text-align:center;
+                background-position: center center; background-repeat: no-repeat;">
+            <br/>
+            <img src="img/avatorOnlyLv{{ctrl.lv}}.png" alt="アバター">
+        </ons-col>
+    </ons-row>
+
+    <!-- デバッグ用
+    <p>User: {{ctrl.user}} は、Lv: {{ctrl.lv}} だよ。</p>
+    <p>[{{ctrl.mainCurrent}}], [{{ctrl.mainMedal}}], [{{ctrl.mainNext}}]</p>
+     -->
+
+    <ons-row>
+        <ons-col style="margin:10px; text-align:center">
+                <img src="img/Medal_main_{{ctrl.mainMedal}}.png" alt="達成度">
+                <figcaption>達成度<br/>{{ctrl.mainCurrent}}/{{ctrl.mainNext}}</figcaption>
+        </ons-col>
+        <ons-col style="margin:10px; text-align:center">
+                <img src="img/Medal_game_{{ctrl.gameMedal}}.png" alt="遊び系">
+                <figcaption>遊び系<br/>{{ctrl.gameCurrent}}/{{ctrl.gameNext}}</figcaption>
+        </ons-col>
+        <ons-col style="margin:10px; text-align:center">
+                <img src="img/Medal_drink_{{ctrl.drinkMedal}}.png" alt="飲食系">
+                <figcaption>飲食系<br/>{{ctrl.drinkCurrent}}/{{ctrl.drinkNext}}</figcaption>
+        </ons-col>
+    </ons-row>
+
+=======
+<ons-page ng-controller="statusCtrl as ctrl">
+        
+    <ons-toolbar>
+        <!-- TODO：GO MISSION ボタンを追加する -->
+
+        <div class="center">{{ctrl.user}}</div>
+        <div class="right"><ons-toolbar-button ng-click="ctrl.logout();"><ons-icon icon="ion-android-close" size="28px"></ons-icon></ons-toolbar-button></div>
+    </ons-toolbar>
+
+    <!-- 背景＋アバターで別にする方法 {{ctrl.lv}} -->
+    <ons-row>
+        <ons-col style="background-image:url(img/backLv{{ctrl.blv}}.png); text-align:center;
+                background-position: center center; background-repeat: no-repeat;">
+            <br/>
+            <img src="img/avatorOnlyLv{{ctrl.lv}}.png" alt="アバター">
+        </ons-col>
+    </ons-row>
+
+    <!-- デバッグ用
+    <p>User: {{ctrl.user}} は、Lv: {{ctrl.lv}} だよ。</p>
+    <p>[{{ctrl.mainCurrent}}], [{{ctrl.mainMedal}}], [{{ctrl.mainNext}}]</p>
+     -->
+
+    <ons-row>
+        <ons-col style="margin:10px; text-align:center">
+                <img src="img/Medal_main_{{ctrl.mainMedal}}.png" alt="達成度">
+                <figcaption>達成度<br/>{{ctrl.mainCurrent}}/{{ctrl.mainNext}}</figcaption>
+        </ons-col>
+        <ons-col style="margin:10px; text-align:center">
+                <img src="img/Medal_game_{{ctrl.gameMedal}}.png" alt="遊び系">
+                <figcaption>遊び系<br/>{{ctrl.gameCurrent}}/{{ctrl.gameNext}}</figcaption>
+        </ons-col>
+        <ons-col style="margin:10px; text-align:center">
+                <img src="img/Medal_drink_{{ctrl.drinkMedal}}.png" alt="飲食系">
+                <figcaption>飲食系<br/>{{ctrl.drinkCurrent}}/{{ctrl.drinkNext}}</figcaption>
+        </ons-col>
+    </ons-row>
+
+>>>>>>> b5de5b00b4d1c1dcfb69df6cca7aa328efca44c1
+</ons-page>
