@@ -515,7 +515,7 @@ myApp.factory('challenger',function($http){
              });
         
     };
-    
+
     /*
         西島がアバター表示用のデータを取得するために作成
     */
@@ -531,7 +531,8 @@ myApp.factory('challenger',function($http){
         avatorStatus.user = currentUser.userName;
 
         if (currentUser) {
-            var Missions = data.ncmb.DataStore("missions");
+            //未使用
+            //var Missions = data.ncmb.DataStore("missions");
             var Challengers = data.ncmb.DataStore("challengers");
             var currentMission = data.currentMission;
             var currentMissionResult = "";
@@ -546,17 +547,6 @@ myApp.factory('challenger',function($http){
                 .then(function(results){
                     // 一致するデータの回数＝成功回数
                     avatorStatus.mainCurrent = results.length;
-                /* 未テスト                    
-                    // ミッションごとに種類を判定する必要有
-                    results.forEach(function(ret){
-                        switch(ret.type){
-                        case 'game':
-                            avatorStatus.gameCurrent = avatorStatus.gameCurrent + 1;
-                        case 'drink':
-                            avatorStatus.drinkCurrent = avatorStatus.drinkCurrent + 1;
-                        }
-                    });
-                */
                     success(avatorStatus);
                 })                
                 .catch(function(err){
@@ -575,6 +565,75 @@ myApp.factory('challenger',function($http){
             return;
         }
     };
+
+    /*
+    // 西島（↑の getAvatorStatus と処理が被っているので、バグになりやすい注意）
+    // Lvだけの計算用に取得関数
+    data.getAvatorLv = function(success,failed){
+        console.log("Challenger getAvatorLv");
+        var Lv = {};
+        avatorStatus.mainCurrent  =  0;
+
+        var currentUser = data.ncmb.User.getCurrentUser();
+        avatorStatus.user = currentUser.userName;
+
+        if (currentUser) {
+            var Challengers = data.ncmb.DataStore("challengers");
+            var currentMission = data.currentMission;
+            var currentMissionResult = "";
+            if(currentMission){
+                console.log("前回参加ミッションID：" + currentMission.objectId);
+                //参加したミッションがある
+
+                Challengers
+                .equalTo("userid",currentUser.objectId)
+                .equalTo("status","finish")
+                .equalTo("result","success").fetchAll()
+                .then(function(results){
+                    // 一致するデータの回数＝成功回数
+                    avatorStatus.mainCurrent = results.length;
+                    success(avatorStatus);
+                })                
+                .catch(function(err){
+                    console.log("getAvatorLv query err");
+                    failed("query err");
+                });
+            }else{
+                console.log("前回参加ミッションなし" );
+                //一度もミッションに参加してない
+                //開催中のミッションを探す
+                success(avatorStatus);
+                //初期値のまま表示
+            }
+        } else {
+            console.log("未ログインまたは取得に失敗");
+            return;
+        }
+    };
+    */
+    
+    // 達成回数からLvを計算する関数
+    /* それぞれのレベルアップ具合
+        アバターと背景 
+            達成度 0: アバター△、背景△
+            達成度 1: アバター○、背景△
+            達成度 2: アバター○、背景○
+            達成度 3: アバター◎、背景○
+            達成度 4: アバター◎、背景◎
+    */
+    data.calcLv = function(mainCurrent){
+        var lvThre    = [ 0, 1, 3, 100 ];       // アバタ：Lv1のスレッショルド, Lv2, Lv3, ∞
+        var blvThre   = [ 0, 2, 4, 100 ];       // 背景用：
+        var l = 0, b = 0;
+        for( var i = 1; i < lvThre.length; i++ ){
+            if( lvThre[i-1]  <= mainCurrent  ){ l = i; }
+        }
+        for( var i = 1; i < blvThre.length; i++ ){
+            if( blvThre[i-1] <= mainCurrent  ){ b = i; }
+        }
+        return {lv:l,blv:b};
+    };
+
  
     return data;
 });
