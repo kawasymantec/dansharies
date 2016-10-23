@@ -309,3 +309,109 @@ function createNcmbDateStr(date) {
 
 
 
+
+
+
+function getChallengers(){
+
+	var missionTitleTable = {};
+	for(var idx in missions){
+		missionTitleTable[missions[idx].objectId] = missions[idx].title;
+	}
+
+
+	var ChallengersDataStore = data.ncmb.DataStore("challengers");
+	if(currentMission){
+		ChallengersDataStore.equalTo("missionid",currentMission.objectId)
+	} else {
+		$("#challengerListMessage").text("missionを選んで絞り込んだ方がいいです。。");		
+	}
+
+	ChallengersDataStore
+	.fetchAll()
+	.then(function(results){
+
+		var challengers = results;
+		if(challengers.length>0){
+			var th = "<tr><td>ID</td><td>名前</td><td>ミッション</td><td>status</td><td>result</td></tr>";
+
+			$("#challengerList").html(th);
+			for(var i = 0; i < challengers.length; i++){
+				var challenger = challengers[i];
+
+				var tr = "<tr id='challenger_" + i + "'><td>"
+				 + challenger.userid + "</td><td>"
+				 + challenger.username + "</td><td>"
+				 + missionTitleTable[challenger.missionid] + "</td><td>" 
+				 + "<span id=\"" + challenger.objectId + "_status\">" + challenger.status + "</span>"
+				 	+ "<select onChange='changeChallengerStatus(\"" + challenger.objectId + "\",\"" + challenger.status + "\",this)'>"
+						+ "<option value=\"notChange\">　</option>"
+						+ "<option value=\"\">未設定</option>"
+						+ "<option value=\"refuse\">refuse</option>"
+						+ "<option value=\"finish\">finish</option>"
+				 	+ "</select><span id=\"" + challenger.objectId + "_status_message\" style=\"color:red;\"></span></td><td>" 
+				 + "<span id=\"" + challenger.objectId + "_result\">" + challenger.result + "</span>"
+				 	+ "<select onChange='changeChallengerResult(\"" + challenger.objectId + "\",\"" + challenger.result + "\",this)'>"
+						+ "<option value=\"notChange\">　</option>"
+						+ "<option value=\"\">未設定</option>"
+						+ "<option value=\"success\">success</option>"
+						+ "<option value=\"failed\">failed</option>"
+				 	+ "</select><span id=\"" + challenger.objectId + "_result_message\" style=\"color:red;\"></span></td></tr>";
+				 $("#challengerList").append(tr);
+			}
+		}else{
+			var example = "<tr><td>no challengers</td></tr>";
+			$("#challengerList").append(example);
+			console.log("no challengers");
+		}
+	})
+	.catch(function(err){
+		console.log("get challengers err " + err);
+	});
+
+}
+
+
+function changeChallengerStatus(objectId, prev_status, elem){
+	var status = elem.value;
+	if(status == "notChange"){
+		return;
+	}
+	var ChallengersDataStore = data.ncmb.DataStore("challengers");
+	var challengerData = new ChallengersDataStore();
+	challengerData.set("objectId", objectId)
+	.set("status", status)
+	.update()
+	.then(function(challengerData){
+		console.log("update challenger status:" + objectId + "," + status);
+		$("#" + objectId + "_status").text(status);
+		$("#" + objectId + "_status_message").text("changed from " + prev_status);
+	})
+	.catch(function(err){
+		console.log("update challenger status失敗:" + objectId + "," + status);
+		$("#challengerListMessage").html("失敗　challenger:" + objectId + "は" + status + "にすることに失敗しました。");
+		console.log(err);
+	});
+}
+
+function changeChallengerResult(objectId, prev_result, elem){
+	var result = elem.value;
+	if(result == "notChange"){
+		return;
+	}
+	var ChallengersDataStore = data.ncmb.DataStore("challengers");
+	var challengerData = new ChallengersDataStore();
+	challengerData.set("objectId", objectId)
+	.set("result", result)
+	.update()
+	.then(function(challengerData){
+		console.log("update challenger result:" + objectId + "," + result);
+		$("#" + objectId + "_result").text(result);
+		$("#" + objectId + "_result_message").text("changed from " + prev_result);
+	})
+	.catch(function(err){
+		console.log("update challenger result失敗:" + objectId + "," + result);
+		$("#challengerListMessage").html("失敗　challenger:" + objectId + "は" + result + "にすることに失敗しました。");
+		console.log(err);
+	});
+}
