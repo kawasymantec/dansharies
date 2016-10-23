@@ -12,6 +12,7 @@
 	<script type="text/javascript" src="lib/jquery-1.12.4.min.js"></script>
 	<script type="text/javascript" src="lib/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
    <script src="lib/ncmb/ncmb.min.js"></script>
+   <script src="js/main.js"></script>
 
 	<script type="text/javascript">
 		var data = {};
@@ -28,141 +29,6 @@
 				clientKey:"aca37c2ba53f426e752addb2310361771343832ab94360c3dfae65b874d0932a"				
 			}
 		}
-//		var Challengers = data.ncmb.DataStore("challengers");
-//		var currentUser = data.ncmb.User.getCurrentUser();
-//		var currentMissionResult = "";
-		var MissionDataStore = {};
-		var missions = {};
-		var dateList = ["2016-10-19"];
-
-
-		$(function() {
-
-			connectServer("kawashima",function(results_missions){
-				missions = results_missions;
-				updateMissionList();
-				updateDatepicker(["2016-10-19"]);				
-			});
-
-			// EventHandlers
-			$("#server").change(function(){
-				var serverID = $(this).val();
-				connectServer(serverID,function(results_missions){
-					missions = results_missions;
-					updateMissionList();
-					updateDatepicker(["2016-10-19"]);
-				});
-			});
-
-			$("#makeNewMission").click(function(){
-				var lastMission = missions[0];
-				if(!lastMission){
-					console.log("lastMission not found");
-					return;
-				}
-
-				var lastNo = lastMission.missionNo;
-				if(!lastNo){
-					console.log("lastNo not found");
-					return;					
-				}
-				if(lastNo == "undefined"){
-					console.log("lastNo is undefined");
-				}
-
-				var newMissionNo;
-				if(lastNo.substr(0,1) == "M"){
-					var number = lastNo.substr(1);
-					newMissionNo = "M" + ("0000"+ (Number(number) + 1)).slice(-4);
-				} else {
-					newMissionNo = lastNo + 1;
-				}
-				$("#missionNo").html(newMissionNo);
-			})
-
-
-
-
-
-
-		});
-
-
-
-
-		function connectServer(serverID, success){
-			data.ncmb = new NCMB(servers[serverID].appKey,servers[serverID].clientKey);
-			MissionDataStore = data.ncmb.DataStore("missions");
-			MissionDataStore.order("createDate",true)    // TODO: 開始日時順にしたほうがいい。XXX:undefinedの扱い
-			.fetchAll()
-			.then(function(results){
-				success(results);
-			}).catch(function(err){
-				console.log(err);
-			});
-		}
-
-		function updateMissionList(){
-			   if(missions.length>0){
-			   	var th = "<tr><td>ミッションNo</td><td>タイトル</td><td>カテゴリ</td><td>説明</td><td>応援コメント</td><td>状態</td><td>開始</td><td>終了</td></tr>";
-
-					$("#missionList").html(th);
-			   	for(var i = 0; i < missions.length; i++){
-			   		var mission = missions[i];
-						var tr = "<tr id='mission_" + i + "'><td>"
-						 + mission.missionNo + "</td><td>"
-						 + mission.title + "</td><td>"
-						 + mission.category + "</td><td>" 
-						 + mission.description + "</td><td>" 
-						 + mission.tips + "</td><td>"
-						 + mission.status + ((mission.status == "active") ? "<button>close</button>" : "<button>active</button>") + "</td><td>" 
-						 + mission.start_datetime + "</td><td>" 
-						 + mission.end_datetime + "</td></tr>";
-						 $("#missionList").append(tr);
-			   	}
-			   }else{
-			   	var example = "<tr><td>1</td><td>炭酸飲まない</td><td>food</td><td>炭酸は体に悪い</td><td>おうえん</td><td>active<button>close</button></td><td>2016-10-19T09:00:00</td><td>2016-10-19T17:00:00</td></tr>"
-					+ "<tr><td>2</td><td>マンガ読まない</td><td>game</td><td>漫画じゃなくて勉強しよう</td><td>応援コメント</td><td>close<button>active</button></td><td>2016-10-26T09:00:00</td><td>2016-10-26T17:00:00</td></tr>";
-					$("#missionList").append(example);
-					console.log("no missions");
-			   }
-
-		}
-
-
-		function updateDatepicker(dateList){
-			$("#datepicker").datepicker({
-				// 日付が選択された時、日付をテキストフィールドへセット
-				onSelect: function(dateText, inst) {
-					$("#date_val").val(dateText);
-				},
-				// 既にイベントが入っている所を太字で表示
-				beforeShowDay: function(date) {
-					var ncmbDateStr = createNcmbDateStr(date);
-					if (dateList.indexOf(ncmbDateStr) != -1) {
-						// 選択可能、太字
-						return [true, 'datepicker-event-exist', ''];
-					} else {
-						return [true, 'datepicker-event-not-exist'];
-					}
-				}
-			});
-		}
-
-		function createNcmbDateStr(date) {
-			var year = date.getYear();
-			var month = date.getMonth() + 1;
-			var day = date.getDate();
-			if (year < 2000) { year += 1900 };
-			if (month < 10)  { month = "0" + month };
-			if (day < 10)    { day = "0" + day };
-
-			var dateStr = year + "-" + month + "-" + day;
-			return dateStr;
-		}
-
-
-
 	</script>
 </head>
 <body>
@@ -185,37 +51,41 @@
 <div id="mission">
 <table>
 	<tr>
-		<td>ミッションNo：</td><td><span id="missionNo" type="text" name="missionNo">未選択</span>	<button id="makeNewMission">番号新規作成</button></td>
+		<td>ミッションNo：</td><td><span id="missionNo" type="text" name="missionNo">未選択</span>
+		&nbsp;&nbsp;&nbsp;	<span id="objectId"><button id="makeNewMission">番号新規作成</button></span></td>
 	</tr><tr>
-		<td>日付:</td><td><input type="text" id="date_val"/></td>
+		<td>タイトル：</td><td><input id="title" type="text" size="30" name="title"/></td>
 	</tr><tr>
-		<td>タイトル：</td><td><input id="title" type="text" name="title"/></td>
+		<td>説明：</td><td><textarea id="description" type="text" rows="3" cols="40" name="description"/>
+		</textarea></td>
+	</tr><tr>
+
+		<td>TIPS：</td><td><textarea id="tips" type="text" rows="3" cols="40" name="tips"/></textarea></td>
 	</tr><tr>
 		<td>カテゴリ：</td><td><select id="category" type="text" name="category">
 			<option value="food">food</option>
 			<option value="game">game</option>
 		</select></td>
 	</tr><tr>
-		<td>説明：</td><td><input id="description" type="text" name="description"/></td>
-	</tr><tr>
-
-		<td>応援コメント：</td><td><input id="tips" type="text" name="tips"/></td>
-	</tr><tr>
 		<td>状態：</td><td><select id="status" type="text" name="status">
 			<option value="close">close</option>
 			<option value="active">active</option>
 		</select></td>
 	</tr><tr>
-		<td>開始：</td><td><input id="start_datetime" type="text" name="start_datetime"/>2016-10-18T00:00:00.000Z</td>
+		<td>開始：</td><td><input id="start_date" type="text" size="12" name="start_date"/>
+		<input id="start_time" type="text" size="7" name="start_time" value="09:00"/></td><!--2016-10-18T00:00:00.000Z-->
 	</tr><tr>
-		<td>終了：</td><td><input id="end_datetime" type="text" name="end_datetime"/>2016-10-18T09:00:00.000Z</td>
+		<td>終了：</td><td><input id="end_date" type="text" size="12" name="end_date"/>
+		<input id="end_time" type="text" size="7" name="end_time" value="18:00"/></td><!--2016-10-18T09:00:00.000Z-->
 	</tr><tr>
 		<td>出題画像：</td><td><input id="entry_syutsudai" name="entry_syutsudai" type="file"/></td>
 	</tr><tr>
 		<td>応援画像：</td><td><input id="entry_ouen" name="entry_ouen" type="file"/></td>
 	</tr>
 </table>
-	<button>更新</button>
+	<button id="updateMission">更新</button>
+	<button id="createMission">作成</button>
+	<div id="createMissionMessage"></div>
 </div>
 <br/>
 
