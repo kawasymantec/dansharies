@@ -12,6 +12,8 @@ myApp.factory('challenger',function($http){
 //    data.ncmb = new NCMB("4b88bd93e5559645c2bb49bf28d61955600bcba834647b2921be0e0b6d35349c","bc4389b1d9c193ce52772f59d6331f699a364a860826d4178e45ba3cb4334bb1");
     //アプリケーションキー・クライアントキー
 //  data.ncmb = new NCMB("1c86df0315639d025352c9605c008b6923da7b4825c04595cbefde5425826f81","4861b858964d8842849b1bcd94c0442be08c0b34250c4b79cc96115e3a57319a");
+    // ta
+//    data.ncmb = new  NCMB("61dd2f6199522295ae04e20895f5d77dfb206f7e369469e4b46bd33943bd768f","5677585be44cd7b3d3af084f7c7d2742652a2b221fa6a7f499122a06fe6bb3eb");
 
     //
     data.currentMission = null;
@@ -186,6 +188,9 @@ myApp.factory('challenger',function($http){
     data.baasurlbase = "https://mb.api.cloud.nifty.com/2013-09-01/applications/J2MyTSYNctp6tx7e/publicFiles/";
 //    data.baasurlbase = "https://mb.api.cloud.nifty.com/2013-09-01/applications/lML0I3RGoykDdhm/publicFiles/";
 //    data.baasurlbase = "https://mb.api.cloud.nifty.com/2013-09-01/applications/HRXHqc5QIzTcC1zL/publicFiles/";
+//    ta
+//    data.baasurlbase = "https://mb.api.cloud.nifty.com/2013-09-01/applications/liglr4AQjkc6nVKK/publicFiles/";
+
 
 /*
         ログイン中かどうかを返す
@@ -305,7 +310,7 @@ myApp.factory('challenger',function($http){
     /*
         ミッションに参加する
     */
-    data.MissionStart = function(mission_id,success,failed){
+    data.MissionStart = function(mission_id,category,success,failed){
         console.log("Challenger MissionStart");
         var Challengers = data.ncmb.DataStore("challengers");
         var challengers = new Challengers();
@@ -313,6 +318,7 @@ myApp.factory('challenger',function($http){
         challengers.set("missionid", mission_id)
              .set("userid", currentUser.objectId)
              .set("username", currentUser.userName)
+             .set("category", category)
              .set("status", "")
              .set("result", "")
              .save()
@@ -331,7 +337,7 @@ myApp.factory('challenger',function($http){
     /*
         ミッションへの参加を拒否する
     */
-    data.MissionRefuse = function(mission_id,success,failed){
+    data.MissionRefuse = function(mission_id,category,success,failed){
         //スポットデータの初期化
         console.log("Challenger MissionRefuse");
         var Challengers = data.ncmb.DataStore("challengers");
@@ -340,6 +346,7 @@ myApp.factory('challenger',function($http){
         challengers.set("missionid", mission_id)
             .set("userid", currentUser.objectId)
             .set("username", currentUser.userName)
+            .set("category", category)
             .set("status", "refuse")
             .set("result", "refuse")
             .save()
@@ -482,7 +489,7 @@ myApp.factory('challenger',function($http){
                 if(results.length>0) {
                     success(results[0]);
                 }else{
-                   failed("no message");
+                   success("やってやれないことはない!");
                 }
             })
             .catch(function(err){
@@ -515,7 +522,7 @@ myApp.factory('challenger',function($http){
              });
         
     };
-    
+
     /*
         西島がアバター表示用のデータを取得するために作成
     */
@@ -528,10 +535,11 @@ myApp.factory('challenger',function($http){
         avatorStatus.drinkCurrent =  0;
         
         var currentUser = data.ncmb.User.getCurrentUser();
-        avatorStatus.user = currentUser.userName+"("+currentUser.objectId+")";
+        avatorStatus.user = currentUser.userName;
 
         if (currentUser) {
-            var Missions = data.ncmb.DataStore("missions");
+            //未使用
+            //var Missions = data.ncmb.DataStore("missions");
             var Challengers = data.ncmb.DataStore("challengers");
             var currentMission = data.currentMission;
             var currentMissionResult = "";
@@ -546,11 +554,6 @@ myApp.factory('challenger',function($http){
                 .then(function(results){
                     // 一致するデータの回数＝成功回数
                     avatorStatus.mainCurrent = results.length;
-                    
-                    // ★TODO:ミッションごとに種類を判定する必要有★
-                    results.forEach(function(ret){
-                        avatorStatus.drinkCurrent = avatorStatus.drinkCurrent + 1;
-                    });
                     success(avatorStatus);
                 })                
                 .catch(function(err){
@@ -569,6 +572,73 @@ myApp.factory('challenger',function($http){
             return;
         }
     };
+
+    // 西島（↑の getAvatorStatus と処理が被っているので、バグになりやすい注意）
+    // Lvだけの計算用に取得関数
+    data.getAvatorLv = function(success,failed){
+        console.log("Challenger getAvatorLv");
+        var avatorStatus = {};
+        avatorStatus.mainCurrent  =  0;
+
+        var currentUser = data.ncmb.User.getCurrentUser();
+        avatorStatus.user = currentUser.userName;
+
+        if (currentUser) {
+            var Challengers = data.ncmb.DataStore("challengers");
+            var currentMission = data.currentMission;
+            var currentMissionResult = "";
+            if(currentMission){
+                console.log("前回参加ミッションID：" + currentMission.objectId);
+                //参加したミッションがある
+
+                Challengers
+                .equalTo("userid",currentUser.objectId)
+                .equalTo("status","finish")
+                .equalTo("result","success").fetchAll()
+                .then(function(results){
+                    // 一致するデータの回数＝成功回数
+                    avatorStatus.mainCurrent = results.length;
+                    success(avatorStatus);
+                })                
+                .catch(function(err){
+                    console.log("getAvatorLv query err");
+                    failed("query err");
+                });
+            }else{
+                console.log("前回参加ミッションなし" );
+                //一度もミッションに参加してない
+                //開催中のミッションを探す
+                success(avatorStatus);
+                //初期値のまま表示
+            }
+        } else {
+            console.log("未ログインまたは取得に失敗");
+            return;
+        }
+    };
+    
+    // 達成回数からLvを計算する関数
+    /* それぞれのレベルアップ具合
+        アバターと背景 
+            達成度 0: アバター△、背景△
+            達成度 1: アバター○、背景△
+            達成度 2: アバター○、背景○
+            達成度 3: アバター◎、背景○
+            達成度 4: アバター◎、背景◎
+    */
+    data.calcLv = function(mainCurrent){
+        var lvThre    = [ 0, 1, 3, 100 ];       // アバタ：Lv1のスレッショルド, Lv2, Lv3, ∞
+        var blvThre   = [ 0, 2, 4, 100 ];       // 背景用：
+        var l = 0, b = 0;
+        for( var i = 1; i < lvThre.length; i++ ){
+            if( lvThre[i-1]  <= mainCurrent  ){ l = i; }
+        }
+        for( var i = 1; i < blvThre.length; i++ ){
+            if( blvThre[i-1] <= mainCurrent  ){ b = i; }
+        }
+        return {lv:l,blv:b};
+    };
+
  
     return data;
 });

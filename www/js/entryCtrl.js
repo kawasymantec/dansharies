@@ -14,7 +14,7 @@ myApp.controller('entryCtrl',function($scope,challenger){
     this.entry = function(){
         //チャレンジに参加する
         console.log("entryCtrl entry");
-        challenger.MissionStart(challenger.currentMission.objectId,function(){
+        challenger.MissionStart(challenger.currentMission.objectId,challenger.currentMission.category,function(){
             myNavigator.replacePage('ganbare.html',{ animation: 'none'});
         },function(){
             myNavigator.replacePage('logout.html',{ animation: 'none'});
@@ -24,7 +24,7 @@ myApp.controller('entryCtrl',function($scope,challenger){
     this.refuse = function(){
         //チャレンジに参加しない
         console.log("entryCtrl refuse");
-        challenger.MissionRefuse(challenger.currentMission.objectId,function(){
+        challenger.MissionRefuse(challenger.currentMission.objectId,challenger.currentMission.category,function(){
             myNavigator.replacePage('top.html',{ animation: 'none'});
         },function(){
             myNavigator.replacePage('logout.html',{ animation: 'none'});

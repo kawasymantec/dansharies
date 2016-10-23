@@ -14,6 +14,21 @@ myApp.controller('challengeCtrl',function($scope,challenger,$timeout){
     this.totalChallenger = "-";
     var target = this;
     var cheerme_times = 0;
+
+    /********************************************************/
+    // 西島：色々なページでLvを取得するための機構
+    var target = this;
+    challenger.getAvatorStatus(function(avatorStatus){
+        $timeout(function() {
+            var lvData          = challenger.calcLv(avatorStatus.mainCurrent);
+            target.lv           = lvData.lv;
+        },100);
+    },function(err){
+        console.log(err);
+        //$timeout(function() {},100);
+    });
+    /********************************************************/
+
     challenger.GetChallengerCount(challenger.currentMission.objectId,function(active,total){
         console.log("challengeCtrl challenger Count!");
         $timeout(function() {
@@ -52,11 +67,11 @@ myApp.controller('challengeCtrl',function($scope,challenger,$timeout){
     this.cheerMe = function(){
         console.log("challengeCtrl cheerMe");
         cheerme_times++;
-        if(cheerme_times % 5 == 0){            
-            myNavigator.pushPage('cheermeHirose.html',{ animation: 'none'});        
-        } else {
+    //    if(cheerme_times % 5 == 0){            
+    //        myNavigator.pushPage('cheermeHirose.html',{ animation: 'none'});        
+    //    } else {
             myNavigator.pushPage('cheerme.html',{ animation: 'none'});        
-        }
+    //    }
 /*        //だれかの応援メッセージが届く
         //メッセージ入力
         challenger.ChallengeGetCheer(challenger.currentMission.objectId,function(cheer){
@@ -69,6 +84,14 @@ myApp.controller('challengeCtrl',function($scope,challenger,$timeout){
         });
 */
     };
+    
+    // 西島が追加
+    this.goStatus = function(){
+        console.log("challengeCtrl goStatus");
+        //myNavigator.pushPage('cheermeHirose.html',{ animation: 'none'});
+        // あえてアニメーション
+        myNavigator.pushPage('status_back.html');        
+    }
     
     this.logout = function(){
         console.log("challengeCtrl logout");

@@ -3,8 +3,28 @@
         <div class="center">Mission失敗</div>
     </ons-toolbar>
     <p>{{ctrl.title}}</p>
+    <!--     
     <img src="img/failure.png" alt="失敗" style="width: 100%;"/>
-    <br />
+     -->
+    <!-- 背景＋アバターで別にする方法 {{ctrl.lv}} -->
+    <!--    
+    <ons-row style="width:100%; height:350px">
+        <ons-col style="background-image:url(img/back_fail.png); text-align:center;
+                background-position: center center; background-repeat: no-repeat;">
+            <br/>
+            <img src="img/avatorOnlyFailLv{{ctrl.lv}}.png" alt="アバター" style="height:330px">
+        </ons-col>
+    </ons-row>
+     -->
+    <ons-row style="width:100%; height:260px">
+        <ons-col style="background-image:url(img/back_fire.png); text-align:center;
+                background-position: center bottom; background-repeat: no-repeat;">
+            <p style="text-align:left; font-size:xx-large; font-weight : bold">　次こそは！</p>
+            <img src="img/avatorOnlyFightLv{{ctrl.lv}}.png" alt="アバター" style="height:160px">
+        </ons-col>
+    </ons-row>
+    <p> </p>
+
     <ons-row>
         <ons-col style="margin:10px;">
             <ons-button modifier="large" ng-click="ctrl.closeMission();">

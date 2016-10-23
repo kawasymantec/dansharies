@@ -16,7 +16,7 @@ myApp.controller('statusCtrl',function($scope,challenger,$timeout){
             target.drinkCurrent = avatorStatus.drinkCurrent;
             /**********************************************************************************
              * それぞれのレベルアップ具合
-                アバターと背景
+                アバターと背景  （challenger.js 内での処理に移動しました）
                     達成度 0: アバター△、背景△
                     達成度 1: アバター○、背景△
                     達成度 2: アバター○、背景○
@@ -35,8 +35,6 @@ myApp.controller('statusCtrl',function($scope,challenger,$timeout){
             **********************************************************************************/
             // アバター、背景、メダル(全体)、メダル(項目別)の変化するスレッショルド
             // 現在、アバターは3種類、背景は3種類、メダルは4種類存在する＋金メダルの時の分母
-            var lvThre    = [ 0, 1, 3, 100 ];       // アバタ：Lv1のスレッショルド, Lv2, Lv3, ∞
-            var blvThre   = [ 0, 2, 4, 100 ];       // 背景用：
             var mainThre  = [ 0, 2, 4, 6, 100 ];    // 達成度：黒メダル, 銅, 銀, 金, ∞ 
             var otherThre = [ 0, 1, 2, 3, 100 ];    // 項目別：
             var medal     = [ "N", "B", "S", "G" ];
@@ -54,17 +52,37 @@ myApp.controller('statusCtrl',function($scope,challenger,$timeout){
             target.drinkMedal = medal[d];
             target.drinkNext  = otherThre[d+1];
             // レベル
-            var l = 0, b = 0;
-            for( var i = 1; i < lvThre.length; i++ ){
-                if( lvThre[i-1]  <= target.mainCurrent  ){ target.lv  = i; }
-                if( blvThre[i-1] <= target.mainCurrent  ){ target.blv = i; }
-            }
-
+            /*
+                var lvThre    = [ 0, 1, 3, 100 ];       // アバタ：Lv1のスレッショルド, Lv2, Lv3, ∞
+                var blvThre   = [ 0, 2, 4, 100 ];       // 背景用：
+                var l = 0, b = 0;
+                for( var i = 1; i < lvThre.length; i++ ){
+                    if( lvThre[i-1]  <= target.mainCurrent  ){ target.lv  = i; }
+                    if( blvThre[i-1] <= target.mainCurrent  ){ target.blv = i; }
+                }
+            */
+            // バグを減らすために、Lv計算機能を challenger.js に移動（他からも呼び出される）
+            // （ありそうなバグ：Lv計算のスレッショルドがページによって違う）
+            var lvData = challenger.calcLv(target.mainCurrent);
+            target.lv  = lvData.lv;
+            target.blv = lvData.blv;
         },100);
     },function(err){
         console.log(err);
         //$timeout(function() {},100);
     });
+
+    /*
+        // 画面遷移が変わったため削除
+        // 西島が追加
+        this.backStatus = function(){
+            console.log("statusCtrl backStatus");
+            //myNavigator.pushPage('cheermeHirose.html',{ animation: 'none'});
+            // あえてアニメーション
+            myNavigator.popPage();
+            //    ★問題：ミッション受けていない場合には、アバター画面の「戻る」が機能しない。
+        }
+    */
 
     target.logout = function(){
         console.log("statusCtrl logout");
