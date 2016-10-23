@@ -7,6 +7,6 @@ var servers = {
 	kawashima: {
 		appKey:"38b0271001ed27f11c37c96c48a22c3450b80531d8fe34691b840fa9fa78b276",
 		clientKey:"aca37c2ba53f426e752addb2310361771343832ab94360c3dfae65b874d0932a",
-		baasUrlBase:"https://mb.api.cloud.nifty.com/2013-09-01/applications/lML0I3RGoykDdhm/publicFiles/"
+		baasUrlBase:"https://mb.api.cloud.nifty.com/2013-09-01/applications/J2MyTSYNctp6tx7e/publicFiles/"
 	}
 };

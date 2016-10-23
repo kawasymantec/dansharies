@@ -6,7 +6,7 @@ var missions = {};
 
 var currentMission = null;
 var currentDate = null;
-var currentServerID = "sumioka";
+var currentServerID = "kawashima";
 
 $(function() {
 
@@ -18,38 +18,6 @@ $(function() {
 		currentServerID = $(this).val();
 		init(currentServerID);
 	});
-
-	$("#makeNewMission").click(function(){
-		var lastMission = missions[0];
-		if(!lastMission){
-			console.log("lastMission not found");
-			return;
-		}
-
-		var lastNo = lastMission.missionNo;
-		if(!lastNo){
-			console.log("lastNo not found");
-			return;					
-		}
-		if(lastNo == "undefined"){
-			console.log("lastNo is undefined");
-		}
-
-		var newMissionNo;
-		if(lastNo.substr(0,1) == "M"){
-			var number = lastNo.substr(1);
-			newMissionNo = "M" + ("0000"+ (Number(number) + 1)).slice(-4);
-		} else {
-			try {
-				newMissionNo = Number(lastNo) + 1;
-			} catch (e) {
-				newMissionNo = "M1001"
-			}
-		}
-		$("#missionNo").html(newMissionNo);
-	})
-
-
 
 	$("#saveMission").click(function(){
 
@@ -282,7 +250,7 @@ function onSelectImpl(dateText){
 		$("#entry_ouen_img").attr("src", data.baasUrlBase + mission.missionNo + "-entry-ouen.png");
 	} else {
 		$("#missionNo").text("未設定");
-		$("#objectId").html('<button id="makeNewMission">番号新規作成</button>');
+		$("#objectId").html('<button onClick="makeNewMission()">番号新規作成</button>');
 		$("#title").val("");
 		$("#category").val("food");
 		$("#description").val("");
@@ -307,7 +275,44 @@ function createNcmbDateStr(date) {
 	return dateStr;
 }
 
+function makeNewMission(){
 
+	if($("#start_date").val() == ""){
+		alert("先にカレンダーで日付を選んでください");
+		return;
+	}
+
+	var lastMission = missions[0];
+	if(!lastMission){
+		newMissionNo = "M0001"
+		$("#missionNo").html(newMissionNo);
+		console.log("lastMission not found");
+		return;
+	}
+
+	var lastNo = lastMission.missionNo;
+	if(!lastNo){
+		console.log("lastNo not found");
+		return;					
+	}
+	if(lastNo == "undefined"){
+		console.log("lastNo is undefined");
+	}
+
+	var newMissionNo;
+	if(lastNo.substr(0,1) == "M"){
+		var number = lastNo.substr(1);
+		newMissionNo = "M" + ("0000"+ (Number(number) + 1)).slice(-4);
+	} else {
+		try {
+			newMissionNo = Number(lastNo) + 1;
+		} catch (e) {
+			newMissionNo = "M1001"
+		}
+	}
+	$("#missionNo").html(newMissionNo);
+
+}
 
 
 
