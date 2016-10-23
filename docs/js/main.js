@@ -3,7 +3,7 @@
 //		var currentMissionResult = "";
 var MissionDataStore = {};
 var missions = {};
-var currentMission = {};
+var currentMission = null;
 var dateList = [];
 
 
@@ -53,10 +53,10 @@ $(function() {
 
 
 
-	$("#createMission").click(function(){
+	$("#saveMission").click(function(){
 
 		if($("#missionNo").text() == "未選択") {
-			$("#createMissionMessage").html("missinoNoが未設定です");
+			$("#saveMissionMessage").html("missinoNoが未設定です");
 			return;
 		}
 		var missionData = new MissionDataStore();
@@ -68,32 +68,29 @@ $(function() {
 		.set("tips" , $("#tips").val())
 		.set("status" , $("#status").val())
 		.set("start_datetime" , $("#start_date").val() + "T" + $("#start_time").val() + ":00.000+09:00")
-		.set("end_datetime" , $("#end_date").val() + "T" + $("#end_time").val() + ":00.000+09:00")
-		.save()
-		.then(function(missionData){
-			console.log(JSON.stringify(missionData));
-			console.log("create missionData done");
-		})
-		.catch(function(err){
-			console.log(err);
-		});
-		//console.log($("#entry_syutsudai").val());
-		//console.log($("#entry_ouen").val());
-	});
+		.set("end_datetime" , $("#end_date").val() + "T" + $("#end_time").val() + ":00.000+09:00");
 
-	$("#updateMission").click(function(){
-		// var missionData = missions[XXXXXXXXXX TODO]
-		// missionData
-		// .set(missionNo , $("#missionNo").text())
-		// .set(date_val , $("#date_val").val())
-		// .set(title , $("#title").val())
-		// .set(category , $("#category").val())
-		// .set(description , $("#description").val())
-		// .set(tips , $("#tips").val())
-		// .set(status , $("#status").val())
-		// .set(start_datetime , $("#start_datetime").val())
-		// .set(end_datetime , $("#end_datetime").val())
-		// .save();
+		if(currentMission){
+			missionData.set("objectId", currentMission.objectId)
+			.update()
+			.then(function(missionData){
+				console.log(JSON.stringify(missionData));
+				console.log("update missionData done");
+			})
+			.catch(function(err){
+				console.log(err);
+			});
+		} else {
+			missionData
+			.save()
+			.then(function(missionData){
+				console.log(JSON.stringify(missionData));
+				console.log("create missionData done");
+			})
+			.catch(function(err){
+				console.log(err);
+			});
+		}
 		//console.log($("#entry_syutsudai").val());
 		//console.log($("#entry_ouen").val());
 	});
