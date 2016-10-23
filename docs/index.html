@@ -12,6 +12,7 @@
 	<script type="text/javascript" src="lib/jquery-1.12.4.min.js"></script>
 	<script type="text/javascript" src="lib/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
    <script src="lib/ncmb/ncmb.min.js"></script>
+   <script src="conf/settings.js"></script>
    <script src="js/main.js"></script>
 
 	<script type="text/javascript">
@@ -19,16 +20,6 @@
 		var username = "";
 		var password = "";
 
-		var servers = {
-			sumioka: {
-				appKey:"4b88bd93e5559645c2bb49bf28d61955600bcba834647b2921be0e0b6d35349c",
-				clientKey:"bc4389b1d9c193ce52772f59d6331f699a364a860826d4178e45ba3cb4334bb1"
-			},
-			kawashima: {
-				appKey:"38b0271001ed27f11c37c96c48a22c3450b80531d8fe34691b840fa9fa78b276",
-				clientKey:"aca37c2ba53f426e752addb2310361771343832ab94360c3dfae65b874d0932a"				
-			}
-		}
 	</script>
 </head>
 <body>
@@ -49,9 +40,9 @@
 
 <!--   TODO: それぞれのつなぎ　-->
 <div id="mission">
-<table>
-	<tr>
-		<td>ミッションNo：</td><td><span id="missionNo" type="text" name="missionNo">未選択</span>
+<table style="background-color: #eeeeee;">
+	<tr style="font-size: 20px">
+		<td>ミッションNo：</td><td><span id="missionNo" type="text" name="missionNo">未設定</span>
 		&nbsp;&nbsp;&nbsp;	<span id="objectId"><button id="makeNewMission">番号新規作成</button></span></td>
 	</tr><tr>
 		<td>タイトル：</td><td><input id="title" type="text" size="30" name="title"/></td>
@@ -65,6 +56,7 @@
 		<td>カテゴリ：</td><td><select id="category" type="text" name="category">
 			<option value="food">food</option>
 			<option value="game">game</option>
+			<option value="other">other</option>
 		</select></td>
 	</tr><tr>
 		<td>状態：</td><td><select id="status" type="text" name="status">
@@ -78,12 +70,16 @@
 		<td>終了：</td><td><input id="end_date" type="text" size="12" name="end_date"/>
 		<input id="end_time" type="text" size="7" name="end_time" value="18:00"/></td><!--2016-10-18T09:00:00.000Z-->
 	</tr><tr>
-		<td>出題画像：</td><td><input id="entry_syutsudai" name="entry_syutsudai" type="file"/></td>
+		<td>出題画像：</td><td>
+		<img id="entry_syutsudai_img"></img>
+		<input id="entry_syutsudai" name="entry_syutsudai" type="file"/></td>
 	</tr><tr>
-		<td>応援画像：</td><td><input id="entry_ouen" name="entry_ouen" type="file"/></td>
+		<td>応援画像：</td><td>
+		<img id="entry_ouen_img"></img>
+		<input id="entry_ouen" name="entry_ouen" type="file"/></td>
 	</tr>
 </table>
-	<button id="saveMission">保存</button>
+	<button id="saveMission" style="font-size: 20px">保存</button>
 	<div id="saveMissionMessage"></div>
 </div>
 <br/>
@@ -91,14 +87,10 @@
 <div id="missionListDiv">
 
 ◆ミッション一覧
-<table id="missionList" border="1">
-
-</table>
+&nbsp;<span id="missionListMessage" style="color: red"></span>
+<table id="missionList" border="1"></table>
 
 </div>
-
-
-
 
 </body>
 </html>

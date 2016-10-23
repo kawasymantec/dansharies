@@ -3,26 +3,20 @@
 //		var currentMissionResult = "";
 var MissionDataStore = {};
 var missions = {};
-var currentMission = null;
-var dateList = [];
 
+var currentMission = null;
+var currentDate = null;
+var currentServerID = "sumioka";
 
 $(function() {
 
-	connectServer("sumioka",function(results_missions){
-		missions = results_missions;
-		updateMissionList();
-		updateDatepicker(["2016-10-19"]);				
-	});
+	// connectServer, updateMissionsList, updateDatepicker
+	init();
 
 	// EventHandlers
 	$("#server").change(function(){
-		var serverID = $(this).val();
-		connectServer(serverID,function(results_missions){
-			missions = results_missions;
-			updateMissionList();
-			updateDatepicker(["2016-10-19"]);
-		});
+		currentServerID = $(this).val();
+		init(currentServerID);
 	});
 
 	$("#makeNewMission").click(function(){
@@ -46,7 +40,11 @@ $(function() {
 			var number = lastNo.substr(1);
 			newMissionNo = "M" + ("0000"+ (Number(number) + 1)).slice(-4);
 		} else {
-			newMissionNo = Number(lastNo) + 1;
+			try {
+				newMissionNo = Number(lastNo) + 1;
+			} catch (e) {
+				newMissionNo = "M1001"
+			}
 		}
 		$("#missionNo").html(newMissionNo);
 	})
@@ -55,7 +53,7 @@ $(function() {
 
 	$("#saveMission").click(function(){
 
-		if($("#missionNo").text() == "未選択") {
+		if($("#missionNo").text() == "未設定") {
 			$("#saveMissionMessage").html("missinoNoが未設定です");
 			return;
 		}
@@ -76,8 +74,12 @@ $(function() {
 			.then(function(missionData){
 				console.log(JSON.stringify(missionData));
 				console.log("update missionData done");
+				init();
+				$("#saveMissionMessage").html("保存しました。");
 			})
 			.catch(function(err){
+				$("#saveMissionMessage").html("保存に失敗しました。サーバとうまくつながっていないみたいです");
+				init();
 				console.log(err);
 			});
 		} else {
@@ -86,22 +88,64 @@ $(function() {
 			.then(function(missionData){
 				console.log(JSON.stringify(missionData));
 				console.log("create missionData done");
+				init();
+				$("#saveMissionMessage").html("保存しました。");
 			})
 			.catch(function(err){
 				console.log(err);
+				init();
+				$("#saveMissionMessage").html("保存に失敗しました。サーバとうまくつながっていないみたいです");
 			});
 		}
-		//console.log($("#entry_syutsudai").val());
-		//console.log($("#entry_ouen").val());
+
+		var missionNo = $("#missionNo").text();
+		var syutsudaiFileName = missionNo + "-entry-syutsudai.png";
+		var syutsudaiFileData = document.getElementById("entry_syutsudai").files[0];
+
+		if(syutsudaiFileData){
+			data.ncmb.File.upload(syutsudaiFileName, syutsudaiFileData)
+			  .then(function(res){
+			    // アップロード後処理
+			  })
+			  .catch(function(err){
+			    // エラー処理
+			  });			
+		}
+
+		var ouenFileName = missionNo + "-entry-ouen.png";
+		var ouenFileData = document.getElementById("entry_ouen").files[0];
+
+		if(ouenFileData){
+			data.ncmb.File.upload(ouenFileName, ouenFileData)
+			  .then(function(res){
+			    // アップロード後処理
+			  })
+			  .catch(function(err){
+			    // エラー処理
+			  });			
+		}
+
 	});
 
 });
 
-
-
+function init(serverID){
+	if(serverID){
+		currentServerID = serverID;
+	}
+	connectServer(currentServerID,function(results_missions){
+		missions = results_missions;
+		updateMissionList();
+		updateDatepicker();
+		if(currentDate){
+			onSelectImpl(currentDate);
+		}
+	});
+}
 
 function connectServer(serverID, success){
 	data.ncmb = new NCMB(servers[serverID].appKey,servers[serverID].clientKey);
+	data.baasUrlBase = servers[serverID].baasUrlBase;
 	MissionDataStore = data.ncmb.DataStore("missions");
 	MissionDataStore.order("createDate",true)    // TODO: 開始日時順にしたほうがいい。XXX:undefinedの扱い
 	.fetchAll()
@@ -139,7 +183,10 @@ function updateMissionList(){
 				 + mission.category + "</td><td>" 
 				 + mission.description + "</td><td>" 
 				 + mission.tips + "</td><td>"
-				 + mission.status + ((mission.status == "active") ? "<button>close</button>" : "<button>active</button>") + "</td><td>" 
+				 + mission.status
+				 		 + ((mission.status == "active")
+				 		 	? "<button onclick='changeStatus(\"" + mission.objectId + "\"," + mission.missionNo + ",\"close\")'>close</button>" 
+				 		 	: "<button onclick='changeStatus(\"" + mission.objectId + "\"," + mission.missionNo + ",\"active\")'>active</button>") + "</td><td>" 
 				 + start_datetime + "</td><td>" 
 				 + end_datetime + "</td></tr>";
 				 $("#missionList").append(tr);
@@ -153,8 +200,29 @@ function updateMissionList(){
 
 }
 
+function changeStatus(objectId, missionNo, status){
+	var missionData = new MissionDataStore();
+	missionData.set("objectId", objectId)
+	.set("status", status)
+	.update()
+	.then(function(missionData){
+		console.log("update status:" + missionNo + "," + objectId + "," + status);
+		init();
+		$("#missionListMessage").html("missionNo:" + missionNo + "は" + status + "になりました。");
+	})
+	.catch(function(err){
+		console.log("update status失敗:" + missionNo + "," + objectId + "," + status);
+		$("#missionListMessage").html("失敗　missionNo:" + missionNo + "は" + status + "にすることに失敗しました。");
+		init();
+		console.log(err);
+	});
+
+}
+
+
 function updateDatepicker(){
 
+	var dateList = [];
 	for(var idx in missions){
 		var mission = missions[idx];
 		if(mission.start_datetime && mission.start_datetime.length == 29){
@@ -163,47 +231,12 @@ function updateDatepicker(){
 			dateList.push(date);
 		}
 	}
-
+	$("#datepicker").datepicker("destroy");
 	$("#datepicker").datepicker({
 		// 日付が選択された時、日付をテキストフィールドへセット
 		onSelect: function(dateText, inst) {
-			//$("#date_val").val(dateText);
-			var dateParsed = $.datepicker.parseDate( "mm/dd/yy", dateText);
-			var date = $.datepicker.formatDate( "yy-mm-dd", dateParsed);
-			$("#start_date").val(date);
-			$("#end_date").val(date);
-
-			currentMission = null;
-			for(var idx in missions){
-				var mission = missions[idx];
-				if(mission.start_datetime && date == mission.start_datetime.substr(0,10)){
-					currentMission = mission;
-					break;
-				}
-			}
-			if(currentMission){
-				$("#missionNo").text(mission.missionNo);
-				$("#objectId").text(mission.objectId);
-				$("#title").val(mission.title);
-				$("#category").val(mission.category);
-				$("#description").val(mission.description);
-				$("#tips").val(mission.tips);
-				$("#status").val(mission.status);
-				$("#start_date").val(mission.start_datetime.substr(0,10));
-				$("#start_time").val(mission.start_datetime.substr(11,5));
-				$("#end_date").val(mission.end_datetime.substr(0,10));
-				$("#end_time").val(mission.end_datetime.substr(11,5));				
-			} else {
-				$("#missionNo").text("");
-				$("#objectId").html('<button id="makeNewMission">番号新規作成</button>');
-				$("#title").val("");
-				$("#category").val("food");
-				$("#description").val("");
-				$("#tips").val("");
-				$("#status").val("close");
-				$("#start_time").val("09:00");
-				$("#end_time").val("18:00");
-			}
+			currentDate = dateText;
+			onSelectImpl(dateText);
 		},
 		// 既にイベントが入っている所を太字で表示
 		beforeShowDay: function(date) {
@@ -216,6 +249,50 @@ function updateDatepicker(){
 			}
 		}
 	});
+}
+
+function onSelectImpl(dateText){
+	//$("#date_val").val(dateText);
+	var dateParsed = $.datepicker.parseDate( "mm/dd/yy", dateText);
+	var date = $.datepicker.formatDate( "yy-mm-dd", dateParsed);
+	$("#start_date").val(date);
+	$("#end_date").val(date);
+
+	currentMission = null;
+	for(var idx in missions){
+		var mission = missions[idx];
+		if(mission.start_datetime && date == mission.start_datetime.substr(0,10)){
+			currentMission = mission;
+			break;
+		}
+	}
+	if(currentMission){
+		$("#missionNo").text(mission.missionNo);
+		$("#objectId").text(mission.objectId);
+		$("#title").val(mission.title);
+		$("#category").val(mission.category);
+		$("#description").val(mission.description);
+		$("#tips").val(mission.tips);
+		$("#status").val(mission.status);
+		$("#start_date").val(mission.start_datetime.substr(0,10));
+		$("#start_time").val(mission.start_datetime.substr(11,5));
+		$("#end_date").val(mission.end_datetime.substr(0,10));
+		$("#end_time").val(mission.end_datetime.substr(11,5));
+		$("#entry_syutsudai_img").attr("src", data.baasUrlBase + mission.missionNo + "-entry-syutsudai.png");
+		$("#entry_ouen_img").attr("src", data.baasUrlBase + mission.missionNo + "-entry-ouen.png");
+	} else {
+		$("#missionNo").text("未設定");
+		$("#objectId").html('<button id="makeNewMission">番号新規作成</button>');
+		$("#title").val("");
+		$("#category").val("food");
+		$("#description").val("");
+		$("#tips").val("");
+		$("#status").val("close");
+		$("#start_time").val("09:00");
+		$("#end_time").val("18:00");
+		$("#entry_syutsudai_img").attr("src", "");
+		$("#entry_ouen_img").attr("src", "");
+	}
 }
 
 function createNcmbDateStr(date) {
