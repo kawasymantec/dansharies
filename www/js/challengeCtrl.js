@@ -85,14 +85,6 @@ myApp.controller('challengeCtrl',function($scope,challenger,$timeout){
 */
     };
     
-    // 西島が追加
-    this.goStatus = function(){
-        console.log("challengeCtrl goStatus");
-        //myNavigator.pushPage('cheermeHirose.html',{ animation: 'none'});
-        // あえてアニメーション
-        myNavigator.pushPage('status_back.html');        
-    }
-    
     this.logout = function(){
         console.log("challengeCtrl logout");
         myNavigator.replacePage('logout.html',{ animation: 'none'});

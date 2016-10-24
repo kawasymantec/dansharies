@@ -14,9 +14,10 @@ myApp.controller('loginCtrl',function($scope,challenger){
         console.log("loginCtrl login");
         challenger.login(this.username,this.password,function(){
             //成功
-            myNavigator.replacePage('top.html',{ animation: 'none'});
+            //myNavigator.replacePage('top.html',{ animation: 'none'});
+            // ★西島：アバター←→挑戦中
             //最初に表示されるのをアバター画面にします
-            //myNavigator.replacePage('status.html',{ animation: 'none'});
+            myNavigator.replacePage('status.html',{ animation: 'none'});
         },function(){
             //失敗
 //            myNavigator.replacePage('challenge.html',{ animation: 'none'});            

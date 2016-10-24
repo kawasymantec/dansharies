@@ -1,9 +1,9 @@
 <ons-page ng-controller="statusCtrl as ctrl">
         
     <ons-toolbar>
-        <!-- デバッグ用
-        <div class="left"><ons-toolbar-button ng-click="myNavigator.replacePage('success.html');"><ons-icon icon="ion-android-open" size="28px"></ons-icon></ons-toolbar-button></div>
-         -->
+        <!-- ★西島：アバター←→挑戦中画面用 -->
+        <div class="left"><ons-toolbar-button ng-click="myNavigator.replacePage('top.html');"><ons-icon icon="ion-android-clipboard" size="28px"></ons-icon></ons-toolbar-button></div>
+
         <div class="center">{{ctrl.user}}</div>
         <div class="right"><ons-toolbar-button ng-click="ctrl.logout();"><ons-icon icon="ion-android-close" size="28px"></ons-icon></ons-toolbar-button></div>
     </ons-toolbar>
