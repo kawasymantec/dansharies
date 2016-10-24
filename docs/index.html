@@ -1,0 +1,102 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link type="text/css" rel="stylesheet" href="lib/jquery-ui-1.12.1.custom/jquery-ui.css" />
+	<link type="text/css" rel="stylesheet" href="lib/jquery-ui-1.12.1.custom/jquery-ui.structure.css" />
+<!--
+	<link type="text/css" rel="stylesheet" href="lib/jquery-ui-1.12.1.custom/jquery-ui.theme.css" />
+	-->
+	<link type="text/css" rel="stylesheet" href="css/style.css" />
+	<script type="text/javascript" src="lib/jquery-1.12.4.min.js"></script>
+	<script type="text/javascript" src="lib/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+   <script src="lib/ncmb/ncmb.min.js"></script>
+   <script src="conf/settings.js"></script>
+   <script src="js/main.js"></script>
+
+	<script type="text/javascript">
+		var data = {};
+		var username = "";
+		var password = "";
+
+	</script>
+</head>
+<body>
+<div>
+<!--  サーバ選択      TODO: NCMBとのつなぎ -->
+サーバ情報
+	<select id="server" name="server">
+		<option value="kawashima">kawashima</option>
+		<option value="sumioka">sumioka</option>
+	</select>
+</div>
+
+<!--  日付を選択       -->
+<div id="datepicker"></div>
+<br/>
+
+
+
+<!--   TODO: それぞれのつなぎ　-->
+<div id="mission">
+<table style="background-color: #eeeeee;">
+	<tr style="font-size: 20px">
+		<td>ミッションNo：</td><td><span id="missionNo" type="text" name="missionNo">未設定</span>
+		&nbsp;&nbsp;&nbsp;	<span id="objectId"><button onClick="makeNewMission()">番号新規作成</button></span></td>
+	</tr><tr>
+		<td>タイトル：</td><td><input id="title" type="text" size="30" name="title"/></td>
+	</tr><tr>
+		<td>説明：</td><td><textarea id="description" type="text" rows="3" cols="40" name="description"/>
+		</textarea></td>
+	</tr><tr>
+
+		<td>TIPS：</td><td><textarea id="tips" type="text" rows="3" cols="40" name="tips"/></textarea></td>
+	</tr><tr>
+		<td>カテゴリ：</td><td><select id="category" type="text" name="category">
+			<option value="food">food</option>
+			<option value="game">game</option>
+			<option value="other">other</option>
+		</select></td>
+	</tr><tr>
+		<td>状態：</td><td><select id="status" type="text" name="status">
+			<option value="close">close</option>
+			<option value="active">active</option>
+		</select></td>
+	</tr><tr>
+		<td>開始：</td><td><input id="start_date" type="text" size="12" name="start_date"/>
+		<input id="start_time" type="text" size="7" name="start_time" value="09:00"/></td><!--2016-10-18T00:00:00.000Z-->
+	</tr><tr>
+		<td>終了：</td><td><input id="end_date" type="text" size="12" name="end_date"/>
+		<input id="end_time" type="text" size="7" name="end_time" value="18:00"/></td><!--2016-10-18T09:00:00.000Z-->
+	</tr><tr>
+		<td>出題画像：</td><td>
+		<img id="entry_syutsudai_img"></img>
+		<input id="entry_syutsudai" name="entry_syutsudai" type="file"/></td>
+	</tr><tr>
+		<td>応援画像：</td><td>
+		<img id="entry_ouen_img"></img>
+		<input id="entry_ouen" name="entry_ouen" type="file"/></td>
+	</tr>
+</table>
+	<button id="saveMission" style="font-size: 20px">保存</button>
+	<div id="saveMissionMessage"></div>
+</div>
+<br/>
+
+<div id="missionListDiv">
+
+◆ミッション一覧
+&nbsp;<span id="missionListMessage" style="color: red"></span>
+<table id="missionList" border="1"></table>
+
+</div>
+<br/>
+<hr/>
+◆チャレンジャー 一覧  	<button onclick="getChallengers()">取得</button><br/>
+
+&nbsp;<span id="challengerListMessage" style="color: red"></span>
+<table id="challengerList" border="1"></table>
+
+</body>
+</html>
