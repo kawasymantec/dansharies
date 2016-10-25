@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <widget xmlns="http://www.w3.org/ns/widgets" id="com.dansharies.app" version="1.0.0" android-versionCode="2016102501">
-  <name>dansharies</name>
+  <name>Ymetter</name>
   <description>Made with Monaca (http://monaca.mobi)</description>
   <author/>
   <content src="index.html"/>
@@ -94,5 +94,5 @@
   <preference name="SplashScreenDelay" value="1000"/>
   <preference name="Fullscreen" value="false"/>
   <preference name="WindowsStorePublisherName" value="My Name"/>
-  <preference name="WindowsStoreIdentityName" value="275e6538-c73f-64f9-ffad-bc05ed1a0c67"/>
+  <preference name="WindowsStoreIdentityName" value="baea2532-a26a-e3bc-6555-7483038190b5"/>
 </widget>
