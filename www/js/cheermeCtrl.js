@@ -8,7 +8,7 @@ myApp.controller('cheermeCtrl',function($scope,challenger,$timeout){
     "use strict";
     console.log("cheermeCtrl init!");
     var num = (new Date()).getSeconds() % 2;
-    this.img = "img/ouen" + num + ".png";
+    this.img = "img/ouen1.png";
 
     this.username = "-";
     this.message;
