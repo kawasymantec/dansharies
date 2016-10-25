@@ -153,8 +153,8 @@ function updateMissionList(){
 				 + mission.tips + "</td><td>"
 				 + mission.status
 				 		 + ((mission.status == "active")
-				 		 	? "<button onclick='changeStatus(\"" + mission.objectId + "\"," + mission.missionNo + ",\"close\")'>close</button>" 
-				 		 	: "<button onclick='changeStatus(\"" + mission.objectId + "\"," + mission.missionNo + ",\"active\")'>active</button>") + "</td><td>" 
+				 		 	? "<button onclick='changeStatus(\"" + mission.objectId + "\",\"" + mission.missionNo + "\",\"close\")'>close</button>" 
+				 		 	: "<button onclick='changeStatus(\"" + mission.objectId + "\",\"" + mission.missionNo + "\",\"active\")'>active</button>") + "</td><td>" 
 				 + start_datetime + "</td><td>" 
 				 + end_datetime + "</td></tr>";
 				 $("#missionList").append(tr);
@@ -338,7 +338,7 @@ function getChallengers(){
 
 		var challengers = results;
 		if(challengers.length>0){
-			var th = "<tr><td>ID</td><td>名前</td><td>ミッション</td><td>status</td><td>result</td><td></td></tr>";
+			var th = "<tr><td>ID</td><td>名前</td><td>ミッション</td><td>status</td><td>result</td><td>push</td></tr>";
 
 			$("#challengerList").html(th);
 			for(var i = 0; i < challengers.length; i++){
@@ -362,7 +362,11 @@ function getChallengers(){
 						+ "<option value=\"success\">success</option>"
 						+ "<option value=\"failed\">failed</option>"
 				 	+ "</select><span id=\"" + challenger.objectId + "_result_message\" style=\"color:red;\"></span></td>"
-				 	+ "<td><button onclick='pushme(\"" + challenger.userid + "\")'>push</button></td></tr>";
+				 + "<td>"
+				 	+ "<button onclick='pushme(\"" + challenger.userid + "\",\"start\")'>start</button>"
+				 	+ "<button onclick='pushme(\"" + challenger.userid + "\",\"finish\")'>finish</button>"
+				 	+ "<button onclick='pushme(\"" + challenger.userid + "\",\"summery\")'>summery</button>"
+				 + "</td></tr>";
 				 $("#challengerList").append(tr);
 			}
 		}else{
@@ -423,7 +427,14 @@ function changeChallengerResult(objectId, prev_result, elem){
 }
 
 
-function pushme(userid){
+function pushme(userid, messageId){
+
+	var pushMessage = {
+		start: "おはようございます！　本日のミッションがやってまいりました！",
+		finish:"おつかれさまです！　今日のミッションが終了しました！",
+		summery:"おはようございます！　昨日のミッションのサマリが出ました！！"
+	}
+	console.log("push userid:" + userid);
 
 	var PushrefDataStore = data.ncmb.DataStore("pushref");
 	PushrefDataStore
@@ -432,12 +443,13 @@ function pushme(userid){
 	.fetchAll()
 	.then(function(results){
 
+		console.log(JSON.stringify(results));
 		var pushref = results;
 		if(pushref.length>0){
 
 			var push = new data.ncmb.Push();
 			push.set("immediateDeliveryFlag", true)
-			    .set("message", "Hello, World!")
+			    .set("message", pushMessage[messageId])
 			    .set("target", ["android"])
 			    .equalTo("objectId", pushref[0].installationId);
 
