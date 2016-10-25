@@ -20,7 +20,10 @@ myApp.controller('loginCtrl',function($scope,challenger){
             myNavigator.replacePage('status.html',{ animation: 'none'});
         },function(){
             //失敗
-//            myNavigator.replacePage('challenge.html',{ animation: 'none'});            
+             ons.notification.alert({
+                message: 'ログインに失敗しました',title:"エラー"
+            });
+      //            myNavigator.replacePage('challenge.html',{ animation: 'none'});            
         });
         
     };
