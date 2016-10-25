@@ -23,6 +23,7 @@ myApp.controller('hagemasCtrl',function($scope,challenger){
     this.cheer = function(){
         //チャレンジに参加しない
         console.log("hagemasCtrl cheer");
+        if(this.message.length>0){
         challenger.ChallengeCheerUp(challenger.currentMission.objectId,this.message,function(){
           //だれかに応援メッセージを届ける
             myNavigator.popPage();
@@ -30,6 +31,12 @@ myApp.controller('hagemasCtrl',function($scope,challenger){
         },function(){
             //失敗
         });
+        }else{
+             ons.notification.alert({
+                message: '応援メッセージを入れてね',title:"入力エラー"
+            });
+            
+        }
     };
 
     this.logout = function(){
