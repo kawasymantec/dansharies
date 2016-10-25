@@ -338,7 +338,7 @@ function getChallengers(){
 
 		var challengers = results;
 		if(challengers.length>0){
-			var th = "<tr><td>ID</td><td>名前</td><td>ミッション</td><td>status</td><td>result</td></tr>";
+			var th = "<tr><td>ID</td><td>名前</td><td>ミッション</td><td>status</td><td>result</td><td></td></tr>";
 
 			$("#challengerList").html(th);
 			for(var i = 0; i < challengers.length; i++){
@@ -361,12 +361,13 @@ function getChallengers(){
 						+ "<option value=\"\">未設定</option>"
 						+ "<option value=\"success\">success</option>"
 						+ "<option value=\"failed\">failed</option>"
-				 	+ "</select><span id=\"" + challenger.objectId + "_result_message\" style=\"color:red;\"></span></td></tr>";
+				 	+ "</select><span id=\"" + challenger.objectId + "_result_message\" style=\"color:red;\"></span></td>"
+				 	+ "<td><button onclick='pushme(\"" + challenger.userid + "\")'></button></td></tr>";
 				 $("#challengerList").append(tr);
 			}
 		}else{
-			var example = "<tr><td>no challengers</td></tr>";
-			$("#challengerList").append(example);
+			var example = "no challengers";
+			$("#challengerListMessage").text(example);
 			console.log("no challengers");
 		}
 	})
@@ -420,3 +421,44 @@ function changeChallengerResult(objectId, prev_result, elem){
 		console.log(err);
 	});
 }
+
+
+function pushme(userid){
+
+	var PushrefDataStore = data.ncmb.DataStore("pushref");
+	PushrefDataStore
+	.equalTo("userid", userid)
+	.order("createDate",true)
+	.fetchAll()
+	.then(function(results){
+
+		var pushref = results;
+		if(pushref.length>0){
+
+			var push = new data.ncmb.Push();
+			push.set("immediateDeliveryFlag", true)
+			    .set("message", "Hello, World!")
+			    .set("target", ["android"])
+			    .equalTo("objectId", pushref[0].installationId);
+
+			push.send()
+			    .then(function(push){
+			      // 送信後処理
+			      console.log("sucess");
+			     })
+			    .catch(function(err){
+			       // エラー処理
+			      console.log("err");
+			     });
+		}else{
+			var example = "no pushref";
+			$("#challengerListMessage").text(example);
+			console.log("no pushref");
+		}
+	})
+	.catch(function(err){
+		console.log("get pushref err " + err);
+	});
+
+}
+

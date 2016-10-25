@@ -1,0 +1,67 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link type="text/css" rel="stylesheet" href="lib/jquery-ui-1.12.1.custom/jquery-ui.css" />
+	<link type="text/css" rel="stylesheet" href="lib/jquery-ui-1.12.1.custom/jquery-ui.structure.css" />
+<!--
+	<link type="text/css" rel="stylesheet" href="lib/jquery-ui-1.12.1.custom/jquery-ui.theme.css" />
+	-->
+	<link type="text/css" rel="stylesheet" href="css/style.css" />
+	<script type="text/javascript" src="lib/jquery-1.12.4.min.js"></script>
+	<script type="text/javascript" src="lib/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+   <script src="lib/ncmb/ncmb.min.js"></script>
+   <script src="conf/settings.js"></script>
+   <script src="js/main.js"></script>
+
+	<script type="text/javascript">
+		var data = {};
+		var username = "";
+		var password = "";
+
+
+	function pushme(userid){
+
+		var PushrefDataStore = data.ncmb.DataStore("pushref");
+		PushrefDataStore
+		.equalTo("userid", userid)
+		.order("createDate",true)
+		.fetchAll()
+		.then(function(results){
+
+			var pushref = results;
+			if(pushref.length>0){
+
+				var push = new data.ncmb.Push();
+				push.set("immediateDeliveryFlag", true)
+				    .set("message", "Hello, World!")
+				    .set("target", ["android"])
+				    .equalTo("objectId", pushref[0].installationId);
+
+				push.send()
+				    .then(function(push){
+				      // 送信後処理
+				      console.log("sucess");
+				     })
+				    .catch(function(err){
+				       // エラー処理
+				      console.log("err");
+				     });
+			}else{
+				var example = "no pushref";
+//				$("#challengerListMessage").text(example);
+				console.log("no pushref");
+			}
+		})
+		.catch(function(err){
+			console.log("get pushref err " + err);
+		});
+
+	}
+	</script>
+</head>
+<body>
+<button onclick="pushme()">push</button>
+</body>
+</html>
