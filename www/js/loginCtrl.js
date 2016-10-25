@@ -6,13 +6,15 @@
 myApp.controller('loginCtrl',function($scope,challenger){
     "use strict";
     console.log("loginCtrl init!");
-    this.username = "";
-    this.password = "";
-
+    this.username = window.localStorage.getItem('login.userid');
+    this.password = window.localStorage.getItem('login.password');
+    var target  = this;
     //ログイン
     this.login = function(){
         console.log("loginCtrl login");
         challenger.login(this.username,this.password,function(){
+            window.localStorage.setItem('login.userid',target.username);
+            window.localStorage.setItem('login.password',target.password);
             //成功
             //myNavigator.replacePage('top.html',{ animation: 'none'});
             // ★西島：アバター←→挑戦中
