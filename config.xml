@@ -68,12 +68,6 @@
     <icon src="/res/android/icon/xhdpi.png" density="xhdpi"/>
     <icon src="/res/android/icon/xxhdpi.png" density="xxhdpi"/>
     <icon src="/res/android/icon/xxxhdpi.png" density="xxxhdpi"/>
-    <splash src="/res/android/screen/splash-port-ldpi.9.png" density="port-ldpi"/>
-    <splash src="/res/android/screen/splash-port-mdpi.9.png" density="port-mdpi"/>
-    <splash src="/res/android/screen/splash-port-hdpi.9.png" density="port-hdpi"/>
-    <splash src="/res/android/screen/splash-port-xhdpi.9.png" density="port-xhdpi"/>
-    <splash src="/res/android/screen/splash-port-xxhdpi.9.png" density="port-xxhdpi"/>
-    <splash src="/res/android/screen/splash-port-xxxhdpi.9.png" density="port-xxxhdpi"/>
   </platform>
   <platform name="windows">
     <icon src="/res/winrt/icon/package_logo_winrt.png" target="StoreLogo"/>
@@ -100,5 +94,5 @@
   <preference name="SplashScreenDelay" value="1000"/>
   <preference name="Fullscreen" value="false"/>
   <preference name="WindowsStorePublisherName" value="My Name"/>
-  <preference name="WindowsStoreIdentityName" value="98afea2f-c9de-b93f-0991-7cddf7c62140"/>
+  <preference name="WindowsStoreIdentityName" value="275e6538-c73f-64f9-ffad-bc05ed1a0c67"/>
 </widget>
