@@ -328,6 +328,7 @@ function getChallengers(){
 	var ChallengersDataStore = data.ncmb.DataStore("challengers");
 	if(currentMission){
 		ChallengersDataStore = ChallengersDataStore.equalTo("missionid",currentMission.objectId);
+		$("#challengerListMessage").text("");		
 	} else {
 		$("#challengerListMessage").text("missionを選んで絞り込んだ方がいいです。。");		
 	}
@@ -363,9 +364,9 @@ function getChallengers(){
 						+ "<option value=\"failed\">failed</option>"
 				 	+ "</select><span id=\"" + challenger.objectId + "_result_message\" style=\"color:red;\"></span></td>"
 				 + "<td>"
-				 	+ "<button onclick='pushme(\"" + challenger.userid + "\",\"start\")'>start</button>"
-				 	+ "<button onclick='pushme(\"" + challenger.userid + "\",\"finish\")'>finish</button>"
-				 	+ "<button onclick='pushme(\"" + challenger.userid + "\",\"summery\")'>summery</button>"
+				 	+ "<button onclick='pushme(\"" + challenger.username + "\",\"start\")'>start</button>"
+				 	+ "<button onclick='pushme(\"" + challenger.username + "\",\"finish\")'>finish</button>"
+				 	+ "<button onclick='pushme(\"" + challenger.username + "\",\"summery\")'>summery</button>"
 				 + "</td></tr>";
 				 $("#challengerList").append(tr);
 			}
@@ -427,7 +428,7 @@ function changeChallengerResult(objectId, prev_result, elem){
 }
 
 
-function pushme(userid, messageId){
+function pushme(username, messageId){
 
 	var pushMessage = {
 		start: "おはようございます！　本日のミッションがやってまいりました！",
@@ -438,7 +439,7 @@ function pushme(userid, messageId){
 
 	var PushrefDataStore = data.ncmb.DataStore("pushref");
 	PushrefDataStore
-	.equalTo("userid", userid)
+	.equalTo("userid", username)
 	.order("createDate",true)
 	.fetchAll()
 	.then(function(results){
@@ -447,21 +448,21 @@ function pushme(userid, messageId){
 		var pushref = results;
 		if(pushref.length>0){
 
-			var push = new data.ncmb.Push();
-			push.set("immediateDeliveryFlag", true)
-			    .set("message", pushMessage[messageId])
-			    .set("target", ["android"])
-			    .equalTo("objectId", pushref[0].installationId);
+			// var push = new data.ncmb.Push();
+			// push.set("immediateDeliveryFlag", true)
+			//     .set("message", pushMessage[messageId])
+			//     .set("target", ["android"])
+			//     .equalTo("objectId", pushref[0].installationId);
 
-			push.send()
-			    .then(function(push){
-			      // 送信後処理
-			      console.log("sucess");
-			     })
-			    .catch(function(err){
-			       // エラー処理
-			      console.log("err");
-			     });
+			// push.send()
+			//     .then(function(push){
+			//       // 送信後処理
+			//       console.log("sucess");
+			//      })
+			//     .catch(function(err){
+			//        // エラー処理
+			//       console.log("err");
+			//      });
 		}else{
 			var example = "no pushref";
 			$("#challengerListMessage").text(example);
