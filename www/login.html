@@ -14,7 +14,7 @@
     <br/>
     <ons-row style="width:100%;">
         <ons-col style="text-align:center;">
-                <img src="img/Ymetter.png" style="width: 80%; text-align:center"/>
+                <img src="img/Ymetter.png" style="width: 60%; text-align:center"/>
         </ons-col>
     </ons-row>
     <ons-row>
@@ -30,6 +30,14 @@
     <ons-row>
         <ons-col style="margin:10px;"> 
             <ons-button modifier="large" ng-click="ctrl.login();">ログイン</ons-button>
+        </ons-col>
+    </ons-row>
+    <ons-row>
+        <ons-col style="margin:10px;">
+            <input  type="checkbox" ng-model="ctrl.remember"
+   ng-init="ctrl.remember=true"
+   ng-true-value="true"
+   ng-false-value="false">ログイン情報を保存する</input>
         </ons-col>
     </ons-row>
     <ons-row>
