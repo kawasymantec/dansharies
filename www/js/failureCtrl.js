@@ -25,7 +25,9 @@ myApp.controller('failureCtrl',function($scope,challenger,$timeout){
         //失敗コメントを登録する
         console.log("failureCtrl closeMission");
         challenger.MissionClose(challenger.currentMission.objectId,function(){
-            myNavigator.replacePage('top.html',{ animation: 'none'});
+            //myNavigator.replacePage('top.html',{ animation: 'none'});
+            // 西島が修正（いったん、ミッション終了後は、ステータス画面に戻った方がよい）
+            myNavigator.replacePage('status.html',{ animation: 'none'});
         },function(){
             myNavigator.replacePage('logout.html',{ animation: 'none'});
         });
