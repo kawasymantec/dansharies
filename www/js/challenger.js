@@ -19,6 +19,34 @@ myApp.factory('challenger',function($http){
     data.currentMission = null;
 
     /*
+        installationIdを保存する
+    */
+    data.setInstallationId = function(installationId, userid){
+        var Installation = data.ncmb.DataStore("installation");
+        Installation.equalTo("objectId",installationId)
+            .order("createDate",true)
+            .fetchAll()
+            .then(function(results){
+                if(results.length>0) {
+                    results[0]
+                    .set("userid", userid)
+                    .update()
+                    .then(function(){
+                    })
+                    .catch(function(err){
+                        // エラー処理
+                        console.log(err);
+                    });
+                }
+            })
+            .catch(function(err){
+               // エラー処理
+               console.log(err);
+            });
+
+    };
+
+    /*
         参加中もしくは、最後に参加したミッションの情報を取得する
     */
     data.getCurrentMission = function(success,failed){
@@ -127,9 +155,11 @@ myApp.factory('challenger',function($http){
         console.log("Challenger login");
         data.ncmb.User.login(userid, password)
         .then(function(user){
-                  // ログイン後処理
+                // ログイン後処理
                 console.log("Challenger login success");
                 data.isLogined = true;
+                // installationIDを保存
+                data.setInstallationId(window.installationId, userid);
                 data.getCurrentMission(success,success);
         })
         .catch(function(err){
