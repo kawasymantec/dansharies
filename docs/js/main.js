@@ -435,7 +435,7 @@ function pushme(username, messageId){
 		finish:"おつかれさまです！　今日のミッションが終了しました！",
 		summery:"おはようございます！　昨日のミッションのサマリが出ました！！"
 	}
-	console.log("push userid:" + userid);
+	console.log("push username:" + username);
 
 	var PushrefDataStore = data.ncmb.DataStore("pushref");
 	PushrefDataStore
