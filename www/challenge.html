@@ -1,7 +1,9 @@
 <ons-page ng-controller="challengeCtrl as ctrl">
         
     <ons-toolbar>
-        <div class="left"><ons-toolbar-button ng-click="ctrl.goStatus();"><ons-icon icon="ion-android-person" size="28px"></ons-icon></ons-toolbar-button></div>
+        <!-- ★西島：アバター←→挑戦中画面用 -->
+        <div class="left"><ons-toolbar-button ng-click="myNavigator.replacePage('status.html');"><ons-icon icon="ion-android-person" size="28px"></ons-icon></ons-toolbar-button></div>
+
         <div class="center">挑戦中！</div>
         <div class="right"><ons-toolbar-button ng-click="ctrl.logout();"><ons-icon icon="ion-android-close" size="28px"></ons-icon></ons-toolbar-button></div>
     </ons-toolbar>

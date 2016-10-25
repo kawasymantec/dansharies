@@ -8,5 +8,4 @@ myApp.controller('idleCtrl',function($scope){
         console.log("entryCtrl logout");
         myNavigator.replacePage('logout.html',{ animation: 'none'});
     };
-    
 });
