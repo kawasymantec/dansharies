@@ -362,7 +362,7 @@ function getChallengers(){
 						+ "<option value=\"success\">success</option>"
 						+ "<option value=\"failed\">failed</option>"
 				 	+ "</select><span id=\"" + challenger.objectId + "_result_message\" style=\"color:red;\"></span></td>"
-				 	+ "<td><button onclick='pushme(\"" + challenger.userid + "\")'></button></td></tr>";
+				 	+ "<td><button onclick='pushme(\"" + challenger.userid + "\")'>push</button></td></tr>";
 				 $("#challengerList").append(tr);
 			}
 		}else{
