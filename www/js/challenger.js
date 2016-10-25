@@ -22,8 +22,8 @@ myApp.factory('challenger',function($http){
         installationIdを保存する
     */
     data.setInstallationId = function(installationId, userid){
-        var Installation = data.ncmb.DataStore("installation");
-        Installation.equalTo("objectId",installationId)
+        var Installation = data.ncmb.DataStore("push");
+        Installation.equalTo("installationId",installationId)
             .order("createDate",true)
             .fetchAll()
             .then(function(results){
@@ -31,6 +31,18 @@ myApp.factory('challenger',function($http){
                     results[0]
                     .set("userid", userid)
                     .update()
+                    .then(function(){
+                    })
+                    .catch(function(err){
+                        // エラー処理
+                        console.log(err);
+                    });
+                } else {
+                    var installtion = new Installation();
+                    installtion
+                    .set("installationId", installationId)
+                    .set("userid", userid)
+                    .save()
                     .then(function(){
                     })
                     .catch(function(err){
