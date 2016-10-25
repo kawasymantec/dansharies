@@ -26,7 +26,9 @@ myApp.controller('successCtrl',function($scope,challenger,$timeout){
         //成功コメントを登録する
         console.log("successCtrl registComment");
         challenger.MissionCommentUp(challenger.currentMission.objectId,this.comment,function(){
-            myNavigator.replacePage('top.html',{ animation: 'none'});
+            //myNavigator.replacePage('top.html',{ animation: 'none'});
+            // 西島が修正（いったん、ミッション終了後は、ステータス画面に戻った方がよい）
+            myNavigator.replacePage('status.html',{ animation: 'none'});
         },function(){
             console.log("error");
             
