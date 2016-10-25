@@ -487,7 +487,8 @@ myApp.factory('challenger',function($http){
             .fetchAll()
             .then(function(results){
                 if(results.length>0) {
-                    success(results[0]);
+                    var num = (new Date()).getSeconds() % results.length;
+                    success(results[num]);
                 }else{
                    success("やってやれないことはない!");
                 }
