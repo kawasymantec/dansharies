@@ -327,7 +327,7 @@ function getChallengers(){
 
 	var ChallengersDataStore = data.ncmb.DataStore("challengers");
 	if(currentMission){
-		ChallengersDataStore.equalTo("missionid",currentMission.objectId)
+		ChallengersDataStore = ChallengersDataStore.equalTo("missionid",currentMission.objectId);
 	} else {
 		$("#challengerListMessage").text("missionを選んで絞り込んだ方がいいです。。");		
 	}
