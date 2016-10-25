@@ -2,7 +2,6 @@
 //app init
 var myApp = angular.module('myApp', ['onsen']);
 
-/*
 document.addEventListener('deviceready', function() {
     console.log("device ready!");
     // NCMB 初期化
@@ -42,4 +41,3 @@ document.addEventListener('deviceready', function() {
     }
         
 }, false);
-*/

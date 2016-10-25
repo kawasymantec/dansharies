@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<widget xmlns="http://www.w3.org/ns/widgets" id="com.dansharies.app" version="1.0.0">
+<widget xmlns="http://www.w3.org/ns/widgets" id="com.dansharies.app" version="1.0.0" android-versionCode="20161024">
   <name>dansharies</name>
   <description>Made with Monaca (http://monaca.mobi)</description>
   <author/>
@@ -100,5 +100,6 @@
   <preference name="SplashScreenDelay" value="1000"/>
   <preference name="Fullscreen" value="false"/>
   <preference name="WindowsStorePublisherName" value="My Name"/>
-  <preference name="WindowsStoreIdentityName" value="dddbb4b2-c5a4-0999-67ba-4cb4283aef16"/>
+  <preference name="WindowsStoreIdentityName" value="8c2f0c8a-0f07-80b4-3a7a-c93709e82e5a"/>
+  <preference name="ios-XCBuildConfiguration-TARGETED_DEVICE_FAMILY" value="1,2"/>
 </widget>
