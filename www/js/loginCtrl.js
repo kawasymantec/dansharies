@@ -6,13 +6,24 @@
 myApp.controller('loginCtrl',function($scope,challenger){
     "use strict";
     console.log("loginCtrl init!");
-    this.username = "";
-    this.password = "";
-
+    this.username = window.localStorage.getItem('login.userid');
+    this.password = window.localStorage.getItem('login.password');
+/*    if(this.username.length>0){
+  //      this.remember = 'true';
+    }*/
     //ログイン
     this.login = function(){
         console.log("loginCtrl login");
+        var target  = this;
         challenger.login(this.username,this.password,function(){
+            console.log(target.remember);
+            if(target.remember){
+                window.localStorage.setItem('login.userid',target.username);
+                window.localStorage.setItem('login.password',target.password);
+            }else{
+                window.localStorage.setItem('login.userid','');
+                window.localStorage.setItem('login.password','');
+            }
             //成功
             //myNavigator.replacePage('top.html',{ animation: 'none'});
             // ★西島：アバター←→挑戦中
