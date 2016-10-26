@@ -22,6 +22,9 @@ myApp.controller('cheermeCtrl',function($scope,challenger,$timeout){
         $timeout(function() {
             target.username = cheer.username;
             target.message = cheer.message;
+            if(cheer.img){
+                target.img = cheer.img;            
+            }
         },100);
 
         //成功

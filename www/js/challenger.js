@@ -457,20 +457,91 @@ myApp.factory('challenger',function($http){
         var Cheers = data.ncmb.DataStore("cheers");
         var currentUser = data.ncmb.User.getCurrentUser();
         var cheers = new Cheers();
-        cheers.set("missionid", mission_id)
-            .set("userid", currentUser.objectId)
-            .set("username", currentUser.userName)
-            .set("message", message)
-            .save()
-            .then(function(challenger){
-              // 保存後の処理
-                success();
-            })
-            .catch(function(err){
-               // エラー処理
-                console.log(err);
-                failed(err);
-            });
+
+        // 画像のアップロード
+        var cheersFileData = document.getElementById("hagemasu_img").files[0];
+        if(cheersFileData){            
+            var dataUrl = URL.createObjectURL(cheersFileData);
+            console.log(dataUrl);
+            var canvas = document.getElementById('canvas_hagemasu');
+            if (canvas.getContext) {
+                var context = canvas.getContext('2d');
+                var image = new Image();
+                image.src = dataUrl;
+                document.getElementById("aaa").setAttribute("src",dataUrl);
+                var scale = 1;
+                if (image.height > 480) {
+                    scale = 480 / image.height;
+                }
+                if (image.width * scale > 480) {
+                	scale = 480 / (image.width * scale);
+                }
+                context.drawImage(image, 0, 0, image.width, image.height,
+                    0, 0, image.width * scale, image.height * scale);
+            }
+            
+            // dataURIをBlobに変換
+            var dataURItoBlob = function (dataURI) {
+                var byteString;
+                if (dataURI.split(',')[0].indexOf('base64') >= 0)
+                    byteString = atob(dataURI.split(',')[1]);
+                else
+                    byteString = unescape(dataURI.split(',')[1]);
+                var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+                var ia = new Uint8Array(byteString.length);
+                for (var i = 0; i < byteString.length; i++) {
+                    ia[i] = byteString.charCodeAt(i);
+                }
+                return new Blob([ia], {type:mimeString});
+            }
+            
+            console.log(canvas.toDataURL());
+            
+            var blob = dataURItoBlob(canvas.toDataURL());
+            console.log(blob);
+            var cheerImageFilename = "cheerImg_" + cheers.objectId + ".png"; 
+            data.ncmb.File.upload(cheerImageFilename, blob)
+                .then(function(res){
+                    // アップロード後処理
+                    console.log("cheers img uploaded");
+                    var cheerImagePath = data.baasurlbase + cheerImageFilename;
+                    cheers.set("missionid", mission_id)
+                    .set("userid", currentUser.objectId)
+                    .set("username", currentUser.userName)
+                    .set("message", message)
+                    .set("img", cheerImagePath)
+                    .save()
+                    .then(function(challenger){
+                      // 保存後の処理
+                        success();
+                    })
+                    .catch(function(err){
+                       // エラー処理
+                        console.log(err);
+                        failed(err);
+                    });
+                })
+                .catch(function(err){
+                    // エラー処理
+                    console.log("cheers img failed");
+                });			            
+        } else {
+            
+            cheers.set("missionid", mission_id)
+                .set("userid", currentUser.objectId)
+                .set("username", currentUser.userName)
+                .set("message", message)
+                .save()
+                .then(function(challenger){
+                  // 保存後の処理
+                    success();
+                })
+                .catch(function(err){
+                   // エラー処理
+                    console.log(err);
+                    failed(err);
+                });
+        }
     };
 
     /*

@@ -10,6 +10,7 @@
     <ons-row>
         <ons-col style="margin:10px;"> 
             <ons-input modifier="large" placeholder="応援メッセ―ジ" ng-model="ctrl.message" float style="width:100%;"></ons-input>
+            <input type="file" id="hagemasu_img" name="hagemasu_img" accept="image/*" capture="camera">
         </ons-col>
     </ons-row>
     
@@ -18,4 +19,6 @@
             <ons-button modifier="large" ng-click="ctrl.cheer();">はげます</ons-button>
         </ons-col>
     </ons-row>
+    <canvas id="canvas_hagemasu"></canvas>
+    <img id="aaa" src=""/>
 </ons-page>
