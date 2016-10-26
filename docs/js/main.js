@@ -6,7 +6,7 @@ var missions = {};
 
 var currentMission = null;
 var currentDate = null;
-var currentServerID = "kawashima";
+var currentServerID = "sumioka";
 
 $(function() {
 
