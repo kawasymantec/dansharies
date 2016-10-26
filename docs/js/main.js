@@ -447,6 +447,7 @@ function pushme(username, messageId){
 		console.log(JSON.stringify(results));
 		var pushref = results;
 		if(pushref.length>0){
+			console.log("installationId:" installationId);
 
 			var push = new data.ncmb.Push();
 			push.set("immediateDeliveryFlag", true)
