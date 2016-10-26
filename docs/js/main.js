@@ -452,8 +452,9 @@ function pushme(username, messageId){
 			push.set("immediateDeliveryFlag", true)
 			    .set("message", pushMessage[messageId])
 			    .set("target", ["android"])
-			    .equalTo("objectId", pushref[0].installationId);
-
+			    .set("searchCondition", {
+			    	"objectId" : pushref[0].installationId
+			    });
 			push.send()
 			    .then(function(push){
 			      // 送信後処理
