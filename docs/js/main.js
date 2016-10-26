@@ -448,21 +448,22 @@ function pushme(username, messageId){
 		var pushref = results;
 		if(pushref.length>0){
 
-			// var push = new data.ncmb.Push();
-			// push.set("immediateDeliveryFlag", true)
-			//     .set("message", pushMessage[messageId])
-			//     .set("target", ["android"])
-			//     .equalTo("objectId", pushref[0].installationId);
+			var push = new data.ncmb.Push();
+			push.set("immediateDeliveryFlag", true)
+			    .set("message", pushMessage[messageId])
+			    .set("target", ["android"])
+			    .equalTo("objectId", pushref[0].installationId);
 
-			// push.send()
-			//     .then(function(push){
-			//       // 送信後処理
-			//       console.log("sucess");
-			//      })
-			//     .catch(function(err){
-			//        // エラー処理
-			//       console.log("err");
-			//      });
+			push.send()
+			    .then(function(push){
+			      // 送信後処理
+			      console.log("push sucess");
+			     })
+			    .catch(function(err){
+			       // エラー処理
+			      console.log("push err");
+			      console.log("err");
+			     });
 		}else{
 			var example = "no pushref";
 			$("#challengerListMessage").text(example);
