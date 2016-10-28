@@ -5,12 +5,12 @@
     </ons-toolbar>
 
     <div align="center">
-        <img src="img/hagemasu.png" style="width: 90%;"/>
+        <img id="hagemasu_img" src="img/hagemasu.png" style="width: 90%;"/>
     </div>
     <ons-row>
         <ons-col style="margin:10px;"> 
             <ons-input modifier="large" placeholder="応援メッセ―ジ" ng-model="ctrl.message" float style="width:100%;"></ons-input>
-            <input type="file" id="hagemasu_img" name="hagemasu_img" accept="image/*" capture="camera">
+            <input type="file" id="hagemasu_file" name="hagemasu_file" accept="image/*" capture="camera" onchange="angular.element(this).scope().upload();"></ons-input>
         </ons-col>
     </ons-row>
     
@@ -19,6 +19,5 @@
             <ons-button modifier="large" ng-click="ctrl.cheer();">はげます</ons-button>
         </ons-col>
     </ons-row>
-    <canvas id="canvas_hagemasu"></canvas>
-    <img id="aaa" src=""/>
+    <canvas id="canvas_hagemasu" style="display:none"></canvas>
 </ons-page>

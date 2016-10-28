@@ -8,8 +8,8 @@ myApp.factory('challenger',function($http){
     var username = "";
     var password = "";
     // ここのキー情報を書き換えてください
-    data.ncmb = new NCMB("38b0271001ed27f11c37c96c48a22c3450b80531d8fe34691b840fa9fa78b276","aca37c2ba53f426e752addb2310361771343832ab94360c3dfae65b874d0932a");
-//    data.ncmb = new NCMB("4b88bd93e5559645c2bb49bf28d61955600bcba834647b2921be0e0b6d35349c","bc4389b1d9c193ce52772f59d6331f699a364a860826d4178e45ba3cb4334bb1");
+//    data.ncmb = new NCMB("38b0271001ed27f11c37c96c48a22c3450b80531d8fe34691b840fa9fa78b276","aca37c2ba53f426e752addb2310361771343832ab94360c3dfae65b874d0932a");
+    data.ncmb = new NCMB("4b88bd93e5559645c2bb49bf28d61955600bcba834647b2921be0e0b6d35349c","bc4389b1d9c193ce52772f59d6331f699a364a860826d4178e45ba3cb4334bb1");
     //アプリケーションキー・クライアントキー
 //  data.ncmb = new NCMB("73726bbeabcae7441a3c53c5700b1f0fd78bc1791a5161e366befb64278d2498","92b1b3cb0e347c43de039ebb2023c8a514dc6deb3facfe0da2c1cc767f241fba");
     // ta
@@ -185,8 +185,8 @@ myApp.factory('challenger',function($http){
             });
     };
     
-    data.baasurlbase = "https://mb.api.cloud.nifty.com/2013-09-01/applications/J2MyTSYNctp6tx7e/publicFiles/";
-//    data.baasurlbase = "https://mb.api.cloud.nifty.com/2013-09-01/applications/lML0I3RGoykDdhm/publicFiles/";
+//    data.baasurlbase = "https://mb.api.cloud.nifty.com/2013-09-01/applications/J2MyTSYNctp6tx7e/publicFiles/";
+    data.baasurlbase = "https://mb.api.cloud.nifty.com/2013-09-01/applications/lML0I3RGoykDdhm/publicFiles/";
 //    data.baasurlbase = "https://mb.api.cloud.nifty.com/2013-09-01/applications/INvaO8Na37Wunzom/publicFiles/";
 //    ta
 //    data.baasurlbase = "https://mb.api.cloud.nifty.com/2013-09-01/applications/liglr4AQjkc6nVKK/publicFiles/";
@@ -457,91 +457,100 @@ myApp.factory('challenger',function($http){
         var Cheers = data.ncmb.DataStore("cheers");
         var currentUser = data.ncmb.User.getCurrentUser();
         var cheers = new Cheers();
+        var cheersFileData = document.getElementById("hagemasu_file").files[0];
 
-        // 画像のアップロード
-        var cheersFileData = document.getElementById("hagemasu_img").files[0];
-        if(cheersFileData){            
-            var dataUrl = URL.createObjectURL(cheersFileData);
-            console.log(dataUrl);
-            var canvas = document.getElementById('canvas_hagemasu');
-            if (canvas.getContext) {
-                var context = canvas.getContext('2d');
-                var image = new Image();
-                image.src = dataUrl;
-                document.getElementById("aaa").setAttribute("src",dataUrl);
-                var scale = 1;
-                if (image.height > 480) {
-                    scale = 480 / image.height;
+        // 応援データの登録
+        cheers.set("missionid", mission_id)
+        .set("userid", currentUser.objectId)
+        .set("username", currentUser.userName)
+        .set("message", message)
+        .save()
+        .then(function(cheers){
+            // 保存後の処理
+            // 画像のアップロード
+            if(cheersFileData){
+                var dataUrl = URL.createObjectURL(cheersFileData);
+                console.log(dataUrl);
+                var canvas = document.getElementById('canvas_hagemasu');
+                if (canvas.getContext) {
+                    var context = canvas.getContext('2d');
+                    var image = new Image();
+                    image.src = dataUrl;
+                    console.log(dataUrl);
+                    image.onload = function(){
+                        try{
+                            var scale = 1.0;
+                            if (image.height > 480) {
+                                scale = 480.0 / image.height;
+                            }
+                            if (image.width * scale > 480) {
+                                scale = 480.0 / (image.width * scale);
+                            }
+                            canvas.width = image.width * scale;
+                            canvas.height = image.height * scale;
+                            context.drawImage(image, 0, 0, image.width * scale, image.height * scale);
+                            
+                        } catch(e) {
+                            console.log(e);
+                        }
+                            
+                        // dataURIをBlobに変換
+                        var dataURItoBlob = function (dataURI) {
+                            var byteString;
+                            if (dataURI.split(',')[0].indexOf('base64') >= 0)
+                                byteString = atob(dataURI.split(',')[1]);
+                            else
+                                byteString = unescape(dataURI.split(',')[1]);
+                            var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+                            var ia = new Uint8Array(byteString.length);
+                            for (var i = 0; i < byteString.length; i++) {
+                                ia[i] = byteString.charCodeAt(i);
+                            }
+                            return new Blob([ia], {type:mimeString});
+                        }
+                        
+                        console.log(canvas.toDataURL().substr(0,100));
+                        var blob = dataURItoBlob(canvas.toDataURL());
+                        console.log(blob);
+                        var cheerImageFilename = "cheerImg_" + cheers.objectId + ".png"; 
+                        data.ncmb.File.upload(cheerImageFilename, blob)
+                        .then(function(res){
+                            // アップロード後処理
+                            console.log("cheers img uploaded");
+                            var cheerImagePath = data.baasurlbase + cheerImageFilename;
+                            cheers
+                            .set("img", cheerImagePath)
+                            .update()
+                            .then(function(challenger){
+                              // 保存後の処理
+                                success();
+                            })
+                            .catch(function(err){
+                               // エラー処理
+                                console.log("cheers data update failed");
+                                console.log(err);
+                                failed(err);
+                            });
+                        })
+                        .catch(function(err){
+                            // エラー処理
+                            console.log("cheers img upload failed");
+                            console.log(err);
+                            failed(err);
+                        });    		                                    
+                    }
                 }
-                if (image.width * scale > 480) {
-                	scale = 480 / (image.width * scale);
-                }
-                context.drawImage(image, 0, 0, image.width, image.height,
-                    0, 0, image.width * scale, image.height * scale);
+                
+            } else {
+                success();                
             }
-            
-            // dataURIをBlobに変換
-            var dataURItoBlob = function (dataURI) {
-                var byteString;
-                if (dataURI.split(',')[0].indexOf('base64') >= 0)
-                    byteString = atob(dataURI.split(',')[1]);
-                else
-                    byteString = unescape(dataURI.split(',')[1]);
-                var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-                var ia = new Uint8Array(byteString.length);
-                for (var i = 0; i < byteString.length; i++) {
-                    ia[i] = byteString.charCodeAt(i);
-                }
-                return new Blob([ia], {type:mimeString});
-            }
-            
-            console.log(canvas.toDataURL());
-            
-            var blob = dataURItoBlob(canvas.toDataURL());
-            console.log(blob);
-            var cheerImageFilename = "cheerImg_" + cheers.objectId + ".png"; 
-            data.ncmb.File.upload(cheerImageFilename, blob)
-                .then(function(res){
-                    // アップロード後処理
-                    console.log("cheers img uploaded");
-                    var cheerImagePath = data.baasurlbase + cheerImageFilename;
-                    cheers.set("missionid", mission_id)
-                    .set("userid", currentUser.objectId)
-                    .set("username", currentUser.userName)
-                    .set("message", message)
-                    .set("img", cheerImagePath)
-                    .save()
-                    .then(function(challenger){
-                      // 保存後の処理
-                        success();
-                    })
-                    .catch(function(err){
-                       // エラー処理
-                        console.log(err);
-                        failed(err);
-                    });
-                })
-                .catch(function(err){
-                    // エラー処理
-                    console.log("cheers img failed");
-                });			            
-        } else {
-            
-            cheers.set("missionid", mission_id)
-                .set("userid", currentUser.objectId)
-                .set("username", currentUser.userName)
-                .set("message", message)
-                .save()
-                .then(function(challenger){
-                  // 保存後の処理
-                    success();
-                })
-                .catch(function(err){
-                   // エラー処理
-                    console.log(err);
-                    failed(err);
-                });
-        }
+        })
+        .catch(function(err){
+           // エラー処理
+            console.log(err);
+            failed(err);
+        });
+
     };
 
     /*
