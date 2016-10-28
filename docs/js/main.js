@@ -6,7 +6,7 @@ var missions = {};
 
 var currentMission = null;
 var currentDate = null;
-var currentServerID = "kawashima";
+var currentServerID = "sumioka";
 
 $(function() {
 
@@ -153,8 +153,8 @@ function updateMissionList(){
 				 + mission.tips + "</td><td>"
 				 + mission.status
 				 		 + ((mission.status == "active")
-				 		 	? "<button onclick='changeStatus(\"" + mission.objectId + "\"," + mission.missionNo + ",\"close\")'>close</button>" 
-				 		 	: "<button onclick='changeStatus(\"" + mission.objectId + "\"," + mission.missionNo + ",\"active\")'>active</button>") + "</td><td>" 
+				 		 	? "<button onclick='changeStatus(\"" + mission.objectId + "\",\"" + mission.missionNo + "\",\"close\")'>close</button>" 
+				 		 	: "<button onclick='changeStatus(\"" + mission.objectId + "\",\"" + mission.missionNo + "\",\"active\")'>active</button>") + "</td><td>" 
 				 + start_datetime + "</td><td>" 
 				 + end_datetime + "</td></tr>";
 				 $("#missionList").append(tr);
@@ -327,7 +327,8 @@ function getChallengers(){
 
 	var ChallengersDataStore = data.ncmb.DataStore("challengers");
 	if(currentMission){
-		ChallengersDataStore.equalTo("missionid",currentMission.objectId)
+		ChallengersDataStore = ChallengersDataStore.equalTo("missionid",currentMission.objectId);
+		$("#challengerListMessage").text("");		
 	} else {
 		$("#challengerListMessage").text("missionを選んで絞り込んだ方がいいです。。");		
 	}
@@ -338,7 +339,7 @@ function getChallengers(){
 
 		var challengers = results;
 		if(challengers.length>0){
-			var th = "<tr><td>ID</td><td>名前</td><td>ミッション</td><td>status</td><td>result</td></tr>";
+			var th = "<tr><td>ID</td><td>名前</td><td>ミッション</td><td>status</td><td>result</td><td>push</td></tr>";
 
 			$("#challengerList").html(th);
 			for(var i = 0; i < challengers.length; i++){
@@ -361,12 +362,17 @@ function getChallengers(){
 						+ "<option value=\"\">未設定</option>"
 						+ "<option value=\"success\">success</option>"
 						+ "<option value=\"failed\">failed</option>"
-				 	+ "</select><span id=\"" + challenger.objectId + "_result_message\" style=\"color:red;\"></span></td></tr>";
+				 	+ "</select><span id=\"" + challenger.objectId + "_result_message\" style=\"color:red;\"></span></td>"
+				 + "<td>"
+				 	+ "<button onclick='pushme(\"" + challenger.username + "\",\"start\")'>start</button>"
+				 	+ "<button onclick='pushme(\"" + challenger.username + "\",\"finish\")'>finish</button>"
+				 	+ "<button onclick='pushme(\"" + challenger.username + "\",\"summery\")'>summery</button>"
+				 + "</td></tr>";
 				 $("#challengerList").append(tr);
 			}
 		}else{
-			var example = "<tr><td>no challengers</td></tr>";
-			$("#challengerList").append(example);
+			var example = "no challengers";
+			$("#challengerListMessage").text(example);
 			console.log("no challengers");
 		}
 	})
@@ -420,3 +426,55 @@ function changeChallengerResult(objectId, prev_result, elem){
 		console.log(err);
 	});
 }
+
+
+function pushme(username, messageId){
+
+	var pushMessage = {
+		start: "おはようございます！　本日のミッションがやってまいりました！",
+		finish:"おつかれさまです！　今日のミッションが終了しました！",
+		summery:"おはようございます！　昨日のミッションのサマリが出ました！！"
+	}
+	console.log("push username:" + username);
+
+	var PushrefDataStore = data.ncmb.DataStore("pushref");
+	PushrefDataStore
+	.equalTo("userid", username)
+	.order("createDate",true)
+	.fetchAll()
+	.then(function(results){
+
+		console.log(JSON.stringify(results));
+		var pushref = results;
+		if(pushref.length>0){
+			console.log("installationId:" + pushref[0].installationId);
+
+			var push = new data.ncmb.Push();
+			push.set("immediateDeliveryFlag", true)
+			    .set("message", pushMessage[messageId])
+			    .set("target", ["android"])
+			    .set("searchCondition", {
+			    	"objectId" : pushref[0].installationId
+			    });
+			push.send()
+			    .then(function(push){
+			      // 送信後処理
+			      console.log("push sucess");
+			     })
+			    .catch(function(err){
+			       // エラー処理
+			      console.log("push err");
+			      console.log("err");
+			     });
+		}else{
+			var example = "no pushref";
+			$("#challengerListMessage").text(example);
+			console.log("no pushref");
+		}
+	})
+	.catch(function(err){
+		console.log("get pushref err " + err);
+	});
+
+}
+
