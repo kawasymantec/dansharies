@@ -43,4 +43,13 @@ myApp.controller('hagemasCtrl',function($scope,challenger){
         console.log("entryCtrl logout");
         myNavigator.replacePage('logout.html',{ animation: 'none'});
     };
+
+    $scope.upload = function(){
+        // アップロードした画像を表示
+        console.log("hagemasuCtrl upload");
+        var cheersFileData = document.getElementById("hagemasu_file").files[0];
+        var dataUrl = URL.createObjectURL(cheersFileData);
+        document.getElementById("hagemasu_img").setAttribute("src",dataUrl);
+    };
+    
 });
